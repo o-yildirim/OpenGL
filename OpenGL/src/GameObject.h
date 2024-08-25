@@ -1,7 +1,7 @@
 #pragma once
-#include "Component.h"
 #include "vector"
-
+#include <iostream>
+#include "Component.h"
 
 class GameObject
 {
@@ -9,6 +9,7 @@ private:
 	std::vector<Component*> components;
 
 public:
+	GameObject();
 	~GameObject();
 
 
@@ -20,6 +21,8 @@ public:
 		else
 			std::cout << "GameObject already has that component!" << std::endl;
 	}
+
+
 
 	template<typename T>
 	T* GetComponent()
@@ -34,5 +37,6 @@ public:
 		}
 		return nullptr;
 	}
+
 
 };

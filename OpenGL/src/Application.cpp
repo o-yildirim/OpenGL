@@ -15,7 +15,8 @@
 
 #include "UserInterface.h"
 #include "Window.h"
-
+#include "Rectangle.h"
+#include "Circle.h"
 
 #include "glm/glm.hpp"
 
@@ -51,32 +52,11 @@ int main(void)
 
     //BELOW MAIN PROGRAM.
     {
-        float positions[] = 
-        {
-           -50.0f, -50.0f, //0.0f, 0.0f,//index: 0,  (left bottom)
-            50.0f, -50.0f, //1.0f, 0.0f, //1
-            50.0f,  50.0f, //1.0f, 1.0f,//2 (top right)
-           -50.0f,  50.0f //0.0f, 1.0f//3 
-        };
-
-        unsigned int indices[] = 
-        {
-            0,1,2,
-            2,3,0
-        };
-    
-        VertexArray va;
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-        VertexBufferLayout layout;
-        layout.Push<float>(2);
-        //layout.Push<float>(2);
-        va.AddBuffer(vb, layout);
-
-        IndexBuffer ib(indices, 6);
+      
 
         glm::mat4 projection = glm::ortho(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight(), -1.0f, 1.0f); //The first 4 values just adhere the 4:3 ratio, the values can be 2 * they are.
         glm::mat4 view = glm::mat4(1.0f); 
-                                                                                         
+                                                                               
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
@@ -84,14 +64,13 @@ int main(void)
 
 
         GameObject square;
-        square.AddComponent<Transform>();
-        Transform* transform = square.GetComponent<Transform>();
+        //square.AddComponent<Rectangle>();
+        square.AddComponent<Circle>();
 
-      
-        transform->Translate(Window::GetCenter());
+        Transform* transform = square.GetComponent<Transform>();
         userInterface.SetTransform(transform);
         
-
+  
         Renderer renderer;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -110,8 +89,7 @@ int main(void)
            
             shader.Bind();
             shader.SetUniformMat4f("u_ModelViewProjection", mvp);
-            renderer.Draw(va, ib, shader);
-            
+            renderer.Draw(square, shader);
 
             userInterface.Render();
 

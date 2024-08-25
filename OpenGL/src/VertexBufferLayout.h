@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "ErrorHandling.h"
 #include <vector>
-#include <GL/glew.h>
 
 
 struct VertexBufferElement

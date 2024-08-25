@@ -1,9 +1,12 @@
 #include "Transform.h"
+#include "Window.h"
 
 Transform::Transform()
 {
 	this->modelMatrix = glm::mat4(1.0f);
-	this->position = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	glm::vec3 center = Window::GetCenter();
+	this->position = glm::vec3(center.x, center.y, 0.0f);
 	this->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
