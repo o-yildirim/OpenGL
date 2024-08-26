@@ -38,5 +38,6 @@ public:
 		return nullptr;
 	}
 
+	inline std::vector<Component*> GetAllComponents() { return this->components; }
 
 };

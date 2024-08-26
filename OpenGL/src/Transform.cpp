@@ -71,3 +71,60 @@ glm::mat4 Transform::getModelMatrix()
 {
 	return this->modelMatrix;
 }
+
+void Transform::DisplayComponent()
+{
+    ImGui::Begin("Transform");
+    //Position
+    ImGui::PushItemWidth(this->inputBoxLength);
+    ImGui::Text("Position");
+    ImGui::Text("X:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##posX", &this->position.x, 0.0f, 0.0f, "%.3f");
+
+    ImGui::SameLine();
+
+    ImGui::Text("Y:");
+    ImGui::SameLine();
+
+    ImGui::InputFloat("##posY", &this->position.y, 0.0f, 0.0f, "%.3f");
+    ImGui::SameLine();
+
+    ImGui::Text("Z:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##posZ", &this->position.z, 0.0f, 0.0f, "%.3f");
+
+    //Rotation
+    ImGui::Text("Rotation");
+    ImGui::Text("X:");
+    ImGui::SameLine();
+
+    ImGui::InputFloat("##rotX", &this->rotation.x, 0.0f, 0.0f, "%.3f");
+    ImGui::SameLine();
+
+    ImGui::Text("Y:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##rotY", &this->rotation.y, 0.0f, 0.0f, "%.3f");
+    ImGui::SameLine();
+
+    ImGui::Text("Z:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##rotZ", &this->rotation.z, 0.0f, 0.0f, "%.3f");
+
+    //Scale
+    ImGui::Text("Scale");
+    ImGui::Text("X:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##scaleX", &this->scale.x, 0.0f, 0.0f, "%.3f");
+    ImGui::SameLine();
+
+    ImGui::Text("Y:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##scaleY", &this->scale.y, 0.0f, 0.0f, "%.3f");
+    ImGui::SameLine();
+
+    ImGui::Text("Z:");
+    ImGui::SameLine();
+    ImGui::InputFloat("##scaleZ", &this->scale.z, 0.0f, 0.0f, "%.3f");
+    ImGui::PopItemWidth();
+}

@@ -5,6 +5,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
+
 class Shape: public Component
 {
 protected:

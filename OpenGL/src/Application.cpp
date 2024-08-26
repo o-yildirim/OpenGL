@@ -64,11 +64,12 @@ int main(void)
 
 
         GameObject square;
+        userInterface.SetGameObject(&square);
         //square.AddComponent<Rectangle>();
         square.AddComponent<Circle>();
 
         Transform* transform = square.GetComponent<Transform>();
-        userInterface.SetTransform(transform);
+        
         
   
         Renderer renderer;
@@ -80,7 +81,7 @@ int main(void)
             renderer.Clear();
 
             userInterface.NewFrame();
-            userInterface.DrawTransformWindow();
+            userInterface.DrawObjectComponents();
             userInterface.EndFrame();
             
          

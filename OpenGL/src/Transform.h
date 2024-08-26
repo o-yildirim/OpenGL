@@ -8,6 +8,7 @@ class Transform : public Component
 
 private:
 	glm::mat4 modelMatrix;
+	float inputBoxLength = 70.0f;
 private:
 	void ResetModelMatrix();
 
@@ -23,5 +24,7 @@ public:
 	void Scale(glm::vec3 newScale);
 	void Update();
 	glm::mat4 getModelMatrix();
+
+	void DisplayComponent() override;
 
 };
