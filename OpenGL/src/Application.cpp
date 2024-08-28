@@ -42,7 +42,8 @@ int main(void)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
     
-    if (glewInit() != GLEW_OK) {
+    if (glewInit() != GLEW_OK) 
+    {
         std::cout << "Error";
     }
 
@@ -60,7 +61,7 @@ int main(void)
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
-        shader.SetUniform4f("u_Color", 0.0f, 0.3f, 0.8f, 1.0f);
+        shader.SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
 
 
         GameObject square;

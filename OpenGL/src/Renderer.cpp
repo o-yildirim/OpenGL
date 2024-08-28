@@ -13,5 +13,6 @@ void Renderer::Draw(GameObject& object, const Shader& shader) const
 
 void Renderer::Clear() const
 {
+    GLCall(glClearColor(this->clearColor[0], this->clearColor[1], this->clearColor[2], this->clearColor[3]));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }

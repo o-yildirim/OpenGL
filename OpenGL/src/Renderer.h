@@ -9,6 +9,8 @@
 
 class Renderer
 {
+private:
+    float clearColor[4] = { 0.0f, 0.3f, 0.6f, 1.0f };
 public:
     void Draw(GameObject& object, const Shader& shader) const;
     void Clear() const;
