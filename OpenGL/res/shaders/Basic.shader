@@ -1,29 +1,26 @@
 #shader vertex
-#version 330 core 
+#version 450 core 
 layout(location = 0) in vec4 position;
-//layout(location = 1) in vec2 texCoord;
+layout(location = 1) in vec4 a_Color;
 
-//out vec2 v_TexCoord; //v stands for varying.
 
 uniform mat4 u_ModelViewProjection;
 
+out vec4 v_Color;
+
 void main()                         
 {                                  
+	v_Color = a_Color;	
 	gl_Position = u_ModelViewProjection * position;
-	//v_TexCoord = texCoord;
 };
 
 
 #shader fragment
-#version 330 core
-layout(location = 0) out vec4 color;
-//in vec2 v_TexCoord;
+#version 450 core
 
-uniform vec4 u_Color;
-//uniform sampler2D u_Texture;
+in vec4 v_Color;
+out vec4 color;
 void main()                         
 {                      
-	//vec4 texColor = texture(u_Texture, v_TexCoord);
-	//color = texColor; Comment out to draw texture (also comment out the 3 lines in Application.cpp) 
-	color = u_Color;
+	color = v_Color;
 }; 
