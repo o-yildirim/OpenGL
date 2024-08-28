@@ -61,15 +61,20 @@ int main(void)
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
-        shader.SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+        //shader.SetUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
 
         GameObject square;
-        userInterface.SetGameObject(&square);
-        //square.AddComponent<Rectangle>();
-        square.AddComponent<Circle>();
+        square.AddComponent<Rectangle>();
+        square.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
 
-        Transform* transform = square.GetComponent<Transform>();
+        userInterface.SetGameObject(&square);
+        
+        GameObject circle;
+        circle.AddComponent<Circle>();
+        circle.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
+
+       
         
         
   
@@ -85,13 +90,21 @@ int main(void)
             userInterface.DrawObjectComponents();
             userInterface.EndFrame();
             
-         
-            transform->Update();
-            glm::mat4 mvp = projection * view * transform->getModelMatrix();
-           
+            Transform* squaretransform = square.GetComponent<Transform>();
+            squaretransform->Update();
+            glm::mat4 mvp = projection * view * squaretransform->getModelMatrix();
             shader.Bind();
             shader.SetUniformMat4f("u_ModelViewProjection", mvp);
             renderer.Draw(square, shader);
+
+
+            Transform* circleTransform = circle.GetComponent<Transform>();
+            circleTransform->Update();
+            mvp = projection * view * circleTransform->getModelMatrix();
+            shader.Bind();
+            shader.SetUniformMat4f("u_ModelViewProjection", mvp);
+            renderer.Draw(circle, shader);
+
 
             userInterface.Render();
 

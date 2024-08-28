@@ -11,6 +11,7 @@ class Shape: public Component
 protected:
     float* positions;
     unsigned int* indices; 
+    float color[4];
 
     VertexArray vertexArray;
     VertexBuffer vertexBuffer;
