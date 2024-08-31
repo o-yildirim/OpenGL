@@ -17,6 +17,7 @@
 #include "Window.h"
 #include "Rectangle.h"
 #include "Circle.h"
+#include "Input.h"
 
 #include "glm/glm.hpp"
 
@@ -49,6 +50,7 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
+    Input input(window);
     UserInterface userInterface(window);
 
     //BELOW MAIN PROGRAM.
@@ -75,14 +77,49 @@ int main(void)
         circle.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
 
        
-        
-        
-  
         Renderer renderer;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
+            
+            if (input.GetKeyDown(Keys::A))
+            {
+                std::cout << "Pressed A" << std::endl;
+            }
+            if (input.GetKeyHeld(Keys::A))
+            {
+                std::cout << "Pressing A" << std::endl;
+            }
+            if (input.GetKeyUp(Keys::A))
+            {
+                std::cout << "Released A" << std::endl;
+            }
 
+            if (input.GetMouseButtonDown(MouseButtons::Left))
+            {
+                std::cout << "Pressed left mouse button" << std::endl;
+            }
+            if (input.GetMouseButtonHeld(MouseButtons::Left))
+            {
+                std::cout << "Pressing left mouse button" << std::endl;
+            }
+            if (input.GetMouseButtonUp(MouseButtons::Left))
+            {
+                std::cout << "Released left mouse button" << std::endl;
+            }
+
+            if (input.GetMouseScroll(MouseScroll::Up))
+            {
+                std::cout << "Scrolling up" << std::endl;
+            }
+            if (input.GetMouseScroll(MouseScroll::Down))
+            {
+                std::cout << "Scrolling down" << std::endl;
+            }
+
+
+
+            input.Update();
             /* Render here */
             renderer.Clear();
 
