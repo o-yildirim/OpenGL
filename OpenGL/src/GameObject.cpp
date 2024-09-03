@@ -5,6 +5,7 @@
 GameObject::GameObject()
 {
     this->AddComponent<Transform>();
+    this->GetComponent<Transform>()->SetParent(this);
 }
 
 GameObject::~GameObject()

@@ -12,7 +12,7 @@ Circle::Circle()
 
 
 	float currentAngle = 0;
-	float radius = 50.0f;
+	this->radius = 50.0f;
 
 	unsigned int numVertices = this->GetVertexCount(); //+1 is the origin. I will use it in the index buffer.
 	unsigned int numIndices = this->GetIndexCount();
@@ -34,8 +34,8 @@ Circle::Circle()
 	for(int i = 6; i<numVertices;i+=6)
 	{
 		float currentAngleInRadians = glm::radians(currentAngle);
-		float x = radius * glm::cos(currentAngleInRadians);
-		float y = radius * glm::sin(currentAngleInRadians);
+		float x = this->radius * glm::cos(currentAngleInRadians);
+		float y = this->radius * glm::sin(currentAngleInRadians);
 		this->positions[i] = x;
 		this->positions[i + 1] = y;
 		
@@ -60,6 +60,7 @@ Circle::Circle()
 	this->indices[numIndices - 1] = 1;
 
 	this->InitBuffers();
+
 }
 
 
@@ -67,9 +68,14 @@ void Circle::InitBuffers()
 {
 	this->vertexBuffer.AddData(this->positions, this->GetVertexCount() * sizeof(float));
 	this->layout.Push<float>(2);
+	//this->posLength = 2;
+
 	this->layout.Push<float>(4);
+	//this->colorLength = 4;
+
 	this->vertexArray.AddBuffer(this->vertexBuffer, layout);
 	this->indexBuffer.AddData(this->indices, this->GetIndexCount());
+	//this->vertexLength = 6;
 }
 
 unsigned int Circle::GetIndexCount()
@@ -80,4 +86,17 @@ unsigned int Circle::GetIndexCount()
 unsigned int Circle::GetVertexCount()
 {
 	return 6 * ((360.0f / this->deltaAngle) + 1); //The reason we say 6 is 2 for x,y and 4 for color.
+}
+
+bool Circle::isInside(float x, float y)
+{
+	Transform* transform = this->GetParent()->GetComponent<Transform>();
+	float distance = glm::distance(glm::vec2(x,y), glm::vec2(transform->position.x,transform->position.y));
+	std::cout << distance << std::endl;
+	if (distance <= this->radius)
+	{
+		std::cout << "Inside circle." << std::endl;
+		return true;
+	}
+	return false;
 }

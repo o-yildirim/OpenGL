@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include "Window.h"
 
+
 Transform::Transform()
 {
 	this->modelMatrix = glm::mat4(1.0f);

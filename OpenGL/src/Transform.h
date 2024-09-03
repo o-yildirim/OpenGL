@@ -5,7 +5,6 @@
 
 class Transform : public Component
 {
-
 private:
 	glm::mat4 modelMatrix;
 	float inputBoxLength = 70.0f;
@@ -26,5 +25,6 @@ public:
 	glm::mat4 getModelMatrix();
 
 	void DisplayComponent() override;
-
+	//inline GameObject* GetParent() { return this->parent; }
+	//inline void SetParent(GameObject* parent) { this->parent = parent; }
 };

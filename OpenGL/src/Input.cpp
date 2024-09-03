@@ -7,11 +7,13 @@ std::unordered_map<Keys, bool> Input::m_CurrentKeyStates;
 std::unordered_map<MouseButtons, bool> Input::m_PreviousFrameMouseButtonStates;
 std::unordered_map<MouseButtons, bool> Input::m_CurrentMouseButtonStates;
 
-short int Input::scrollInfo = 0;
+glm::vec2 Input::m_MousePos;
+
+short int Input::m_ScrollInfo = 0;
 
 void Input::MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-	scrollInfo = (int) yOffset;
+	m_ScrollInfo = (int) yOffset;
 }
 
 void Input::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -58,48 +60,55 @@ Input::Input(GLFWwindow* window)
 
 	glfwSetScrollCallback(window, MouseScrollCallback);
 
+	glfwSetCursorPosCallback(window, MousePositionCallback);
+
+}
+void Input::MousePositionCallback(GLFWwindow* window, double xPos, double yPos)
+{
+	m_MousePos.x = xPos;
+	m_MousePos.y = yPos;
 }
 
 void Input::Update()
 {
-	this->m_PreviousFrameKeyStates = this->m_CurrentKeyStates;
-	this->m_PreviousFrameMouseButtonStates = this->m_CurrentMouseButtonStates;
-	this->scrollInfo = 0;
+	m_PreviousFrameKeyStates = m_CurrentKeyStates;
+	m_PreviousFrameMouseButtonStates = m_CurrentMouseButtonStates;
+	m_ScrollInfo = 0;
 }
 
 //For keys.
 bool Input::GetKeyUp(Keys key)
 {
-	return (this->m_PreviousFrameKeyStates[key] && !this->m_CurrentKeyStates[key]);
+	return (m_PreviousFrameKeyStates[key] && !m_CurrentKeyStates[key]);
 }
 
 bool Input::GetKeyDown(Keys key)
 {
-	return (!this->m_PreviousFrameKeyStates[key] && this->m_CurrentKeyStates[key]);
+	return (!m_PreviousFrameKeyStates[key] && m_CurrentKeyStates[key]);
 }
 
 bool Input::GetKeyHeld(Keys key)
 {
-	return (this->m_PreviousFrameKeyStates[key] && this->m_CurrentKeyStates[key]);
+	return (m_PreviousFrameKeyStates[key] && m_CurrentKeyStates[key]);
 }
 
 //For mouse buttons.
 bool Input::GetMouseButtonUp(MouseButtons button)
 {
-	return (this->m_PreviousFrameMouseButtonStates[button] && !this->m_CurrentMouseButtonStates[button]);
+	return (m_PreviousFrameMouseButtonStates[button] && !m_CurrentMouseButtonStates[button]);
 }
 
 bool Input::GetMouseScroll(MouseScroll direction)
 {
 	if (direction == MouseScroll::Up)
 	{
-		if(this->scrollInfo == 1)
+		if(m_ScrollInfo == 1)
 			return true;
 		return false;
 	}
 	else //MouseScroll:Down
 	{
-		if (this->scrollInfo == -1)
+		if (m_ScrollInfo == -1)
 			return true;
 		return false;
 	}
@@ -107,11 +116,15 @@ bool Input::GetMouseScroll(MouseScroll direction)
 
 bool Input::GetMouseButtonDown(MouseButtons button)
 {
-	return (!this->m_PreviousFrameMouseButtonStates[button] && this->m_CurrentMouseButtonStates[button]);
+	return (!m_PreviousFrameMouseButtonStates[button] && m_CurrentMouseButtonStates[button]);
 }
 
 bool Input::GetMouseButtonHeld(MouseButtons button)
 {
-	return (this->m_PreviousFrameMouseButtonStates[button] && this->m_CurrentMouseButtonStates[button]);
+	return (m_PreviousFrameMouseButtonStates[button] && m_CurrentMouseButtonStates[button]);
 }
 
+glm::vec2 Input::GetMousePosition()
+{
+	return m_MousePos;
+}

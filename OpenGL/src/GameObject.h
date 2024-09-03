@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Component.h"
 
+
 class GameObject
 {
 private:
@@ -17,9 +18,15 @@ public:
 	void AddComponent()
 	{
 		if (this->GetComponent<T>() == nullptr) //Cannot add the same component twice.
-			this->components.push_back(new T);
+		{
+			T* comp = new T();
+			comp->SetParent(this);
+			this->components.push_back(comp);
+		}
 		else
+		{
 			std::cout << "GameObject already has that component!" << std::endl;
+		}
 	}
 
 

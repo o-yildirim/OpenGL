@@ -18,6 +18,7 @@
 #include "Rectangle.h"
 #include "Circle.h"
 #include "Input.h"
+#include "Picking.h"
 
 #include "glm/glm.hpp"
 
@@ -63,84 +64,56 @@ int main(void)
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
-        //shader.SetUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+ 
 
 
         GameObject square;
         square.AddComponent<Rectangle>();
         square.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
 
+
         userInterface.SetGameObject(&square);
         
         GameObject circle;
         circle.AddComponent<Circle>();
         circle.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
+     
 
-       
+        std::vector<GameObject*> objectsToRender;
+        objectsToRender.push_back(&circle);
+        objectsToRender.push_back(&square);
+
+        
         Renderer renderer;
-        /* Loop until the user closes the window */
+        Picking picking;
+
         while (!glfwWindowShouldClose(window))
         {
+            picking.Update(objectsToRender);
             
-            if (input.GetKeyDown(Keys::A))
-            {
-                std::cout << "Pressed A" << std::endl;
-            }
-            if (input.GetKeyHeld(Keys::A))
-            {
-                std::cout << "Pressing A" << std::endl;
-            }
-            if (input.GetKeyUp(Keys::A))
-            {
-                std::cout << "Released A" << std::endl;
-            }
 
-            if (input.GetMouseButtonDown(MouseButtons::Left))
+            if (picking.GetSelectedObject())
             {
-                std::cout << "Pressed left mouse button" << std::endl;
+                userInterface.SetGameObject(picking.GetSelectedObject());
             }
-            if (input.GetMouseButtonHeld(MouseButtons::Left))
-            {
-                std::cout << "Pressing left mouse button" << std::endl;
-            }
-            if (input.GetMouseButtonUp(MouseButtons::Left))
-            {
-                std::cout << "Released left mouse button" << std::endl;
-            }
+            Input::Update();
 
-            if (input.GetMouseScroll(MouseScroll::Up))
-            {
-                std::cout << "Scrolling up" << std::endl;
-            }
-            if (input.GetMouseScroll(MouseScroll::Down))
-            {
-                std::cout << "Scrolling down" << std::endl;
-            }
-
-
-
-            input.Update();
-            /* Render here */
             renderer.Clear();
 
             userInterface.NewFrame();
             userInterface.DrawObjectComponents();
             userInterface.EndFrame();
             
-            Transform* squaretransform = square.GetComponent<Transform>();
-            squaretransform->Update();
-            glm::mat4 mvp = projection * view * squaretransform->getModelMatrix();
-            shader.Bind();
-            shader.SetUniformMat4f("u_ModelViewProjection", mvp);
-            renderer.Draw(square, shader);
 
-
-            Transform* circleTransform = circle.GetComponent<Transform>();
-            circleTransform->Update();
-            mvp = projection * view * circleTransform->getModelMatrix();
-            shader.Bind();
-            shader.SetUniformMat4f("u_ModelViewProjection", mvp);
-            renderer.Draw(circle, shader);
+            for (GameObject* object : objectsToRender)
+            {
+                Transform* transform = object->GetComponent<Transform>();
+                transform->Update();
+                glm::mat4 mvp = projection * view * transform->getModelMatrix();
+                shader.Bind();
+                shader.SetUniformMat4f("u_ModelViewProjection", mvp);
+                renderer.Draw(*object, shader);
+            }
 
 
             userInterface.Render();

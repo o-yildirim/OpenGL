@@ -2,25 +2,28 @@
 #include "GLFW/glfw3.h"
 #include "unordered_map";
 #include "InputWrapper.h"
+#include "glm/glm.hpp"
 class Input
 {
 public:
 	Input(GLFWwindow* window);
 public:
-	bool GetKeyDown(Keys key);
-	bool GetKeyHeld(Keys key);
-	bool GetKeyUp(Keys key);
+	static bool GetKeyDown(Keys key);
+	static bool GetKeyHeld(Keys key);
+	static bool GetKeyUp(Keys key);
 
-	bool GetMouseButtonDown(MouseButtons button);
-	bool GetMouseButtonHeld(MouseButtons button);
-	bool GetMouseButtonUp(MouseButtons button);
+	static bool GetMouseButtonDown(MouseButtons button);
+	static bool GetMouseButtonHeld(MouseButtons button);
+	static bool GetMouseButtonUp(MouseButtons button);
 
-	bool GetMouseScroll(MouseScroll direction);
+	static bool GetMouseScroll(MouseScroll direction);
+	static glm::vec2 GetMousePosition();
 
-	void Update();
+	static void Update();
 
 private:
-	static short int scrollInfo; //1 is up, -1 is down scrolling.
+	static short int m_ScrollInfo; //1 is up, -1 is down scrolling.
+	static glm::vec2 m_MousePos;
 	static std::unordered_map<Keys, bool> m_PreviousFrameKeyStates;
 	static std::unordered_map<Keys, bool> m_CurrentKeyStates;
 	static std::unordered_map<MouseButtons, bool> m_PreviousFrameMouseButtonStates;
@@ -31,4 +34,5 @@ private:
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 	static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+	static void MousePositionCallback(GLFWwindow* window, double xPos, double yPos);
 };
