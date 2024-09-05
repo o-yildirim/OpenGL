@@ -12,6 +12,7 @@
 #include "Texture.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 #include "UserInterface.h"
 #include "Window.h"
@@ -58,9 +59,9 @@ int main(void)
     {
       
 
-        glm::mat4 projection = glm::ortho(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight(), -1.0f, 1.0f); //The first 4 values just adhere the 4:3 ratio, the values can be 2 * they are.
-        glm::mat4 view = glm::mat4(1.0f); 
-                                                                               
+        GameObject camera;
+        camera.AddComponent<Camera>();
+                                    
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
@@ -86,6 +87,7 @@ int main(void)
         
         Renderer renderer;
         Picking picking;
+        picking.SetCamera(camera.GetComponent<Camera>());
 
         while (!glfwWindowShouldClose(window))
         {
@@ -109,7 +111,7 @@ int main(void)
             {
                 Transform* transform = object->GetComponent<Transform>();
                 transform->Update();
-                glm::mat4 mvp = projection * view * transform->getModelMatrix();
+                glm::mat4 mvp = camera.GetComponent<Camera>()->GetProjectionMatrix() * camera.GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
                 shader.Bind();
                 shader.SetUniformMat4f("u_ModelViewProjection", mvp);
                 renderer.Draw(*object, shader);
