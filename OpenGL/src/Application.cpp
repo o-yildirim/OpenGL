@@ -91,14 +91,15 @@ int main(void)
 
         while (!glfwWindowShouldClose(window))
         {
+            
             picking.Update(objectsToRender);
             
 
-            if (picking.GetSelectedObject())
+            if (picking.GetSelectedObjects().size() == 1)
             {
-                userInterface.SetGameObject(picking.GetSelectedObject());
+                userInterface.SetGameObject(picking.GetSelectedObjects()[0]);
             }
-            Input::Update();
+            
 
             renderer.Clear();
 
@@ -119,7 +120,7 @@ int main(void)
 
 
             userInterface.Render();
-
+            Input::Update();
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 

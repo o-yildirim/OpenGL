@@ -1,9 +1,5 @@
 ﻿  Application.cpp
-  Picking.cpp
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
   OpenGL.vcxproj -> C:\Users\onyld\source\repos\OpenGL\Debug\OpenGL.exe

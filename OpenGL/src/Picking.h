@@ -5,24 +5,30 @@
 #include "Shape.h"
 #include "Input.h"
 #include "Window.h"
+#include <vector>
+
 class Picking
 {
 	enum PickingStatus
 	{
 		NotPicked,
 		Picked,
-		Dragging
+		Dragging,
+		SelectingArea,
+		PickedMultipleObjects
 	};
 
 private:
-	GameObject* _pickedObj= nullptr;
-	glm::vec2 _initialPositionDif;
+	std::vector<GameObject*> _pickedObjects;
+	std::vector<glm::vec2> _initialPositionDifs;
+	glm::vec2 _areaStartPoint;
 
 	Camera* _camera = nullptr;
 	enum PickingStatus _status = Picking::NotPicked;
 public:
 	void Update(std::vector<GameObject*> renderedObjects);
 	GameObject* GetClosest(std::vector<GameObject*> renderedObjects, glm::vec2 point);
-	inline GameObject* GetSelectedObject() { return this->_pickedObj; }
+	std::vector<GameObject*> GetAllWithinSelectedArea(std::vector<GameObject*> renderedObjects, glm::vec2 startPos, glm::vec2 endPos);
+	inline std::vector<GameObject*> GetSelectedObjects() { return this->_pickedObjects; }
 	inline void SetCamera(Camera* cam) { this->_camera = cam; }
 };
