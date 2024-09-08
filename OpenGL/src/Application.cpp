@@ -43,7 +43,7 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    //glfwSwapInterval(1);
     
     if (glewInit() != GLEW_OK) 
     {
@@ -51,6 +51,8 @@ int main(void)
     }
 
     std::cout << glGetString(GL_VERSION) << std::endl;
+
+    
 
     Input input(window);
     UserInterface userInterface(window);
@@ -89,8 +91,27 @@ int main(void)
         Picking picking;
         picking.SetCamera(camera.GetComponent<Camera>());
 
+        double currentFrame = glfwGetTime();
+        double lastFrame = currentFrame;
+        double deltaTime;
+
+        int numFrames = 0;
+        double lastTime = 0.0;
+        
         while (!glfwWindowShouldClose(window))
         {
+            numFrames++;
+            currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            if (currentFrame - lastTime >= 1.0)
+            {
+                std::cout << numFrames << std::endl;
+                numFrames = 0;
+                lastTime = currentFrame;
+                
+            }
+
             
             picking.Update(objectsToRender);
             
@@ -121,6 +142,9 @@ int main(void)
 
             userInterface.Render();
             Input::Update();
+            
+
+
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
