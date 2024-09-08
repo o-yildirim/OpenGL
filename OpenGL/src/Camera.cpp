@@ -4,6 +4,8 @@
 
 Camera::Camera()
 {
+    this->_className = "Camera";
+
 	this->_projectionMatrix = glm::ortho(0.0f, (float) Window::GetWidth(), 0.0f, (float)Window::GetHeight(), -1.0f, 1.0f); //The first 4 values just adhere the 4:3 ratio, the values can be 2 * they are.
 	this->_viewMatrix = glm::mat4(1.0f);
 }

@@ -4,6 +4,8 @@
 Circle::Circle()
 {
 
+	this->_className = "Circle";
+
 	this->deltaAngle = 10;
 	this->color[0] = 0.0f;
 	this->color[1] = 0.5f; 
@@ -11,7 +13,7 @@ Circle::Circle()
 	this->color[3] = 1.0f;
 
 
-	float currentAngle = 0;
+	
 	this->radius = 50.0f;
 
 	unsigned int numVertices = this->GetVertexCount(); //+1 is the origin. I will use it in the index buffer.
@@ -22,42 +24,10 @@ Circle::Circle()
 	this->positions = new float[numVertices];
 	this->indices = new unsigned int[numIndices];
 
-	this->positions[0] = 0.0f;
-	this->positions[1] = 0.0f;
-	this->positions[2] = this->color[0];//r
-	this->positions[3] = this->color[1];//g
-	this->positions[4] = this->color[2];//b
-	this->positions[5] = this->color[3];//a
+	this->SetPositions();
+	this->SetIndices();
+	this->SetColor();
 
-
-	//std::cout << "x: " << this->positions[0] << ", y:" << this->positions[1] << std::endl;
-	for(int i = 6; i<numVertices;i+=6)
-	{
-		float currentAngleInRadians = glm::radians(currentAngle);
-		float x = this->radius * glm::cos(currentAngleInRadians);
-		float y = this->radius * glm::sin(currentAngleInRadians);
-		this->positions[i] = x;
-		this->positions[i + 1] = y;
-		
-		this->positions[i + 2] = this->color[0];//r
-		this->positions[i + 3] = this->color[1];//g
-		this->positions[i + 4] = this->color[2];//b
-		this->positions[i + 5] = this->color[3];//a
-
-		currentAngle += deltaAngle;
-
-		//std::cout << "x: " << this->positions[i] << ", y:" << this->positions[i + 1] << std::endl;
-	}
-
-	unsigned int counter = 1;
-	for (int i = 0; i < numIndices; i+=3)
-	{
-		this->indices[i] = 0;
-		this->indices[i + 1] = counter;
-		this->indices[i + 2] = counter+1;
-		counter++;
-	}
-	this->indices[numIndices - 1] = 1;
 
 	this->InitBuffers();
 
@@ -78,12 +48,12 @@ void Circle::InitBuffers()
 	//this->vertexLength = 6;
 }
 
-unsigned int Circle::GetIndexCount()
+size_t Circle::GetIndexCount()
 {
 	return 3 * (360.0f / this->deltaAngle);
 }
 
-unsigned int Circle::GetVertexCount()
+size_t Circle::GetVertexCount()
 {
 	return 6 * ((360.0f / this->deltaAngle) + 1); //The reason we say 6 is 2 for x,y and 4 for color.
 }
@@ -99,4 +69,42 @@ bool Circle::isInside(float x, float y)
 		return true;
 	}
 	return false;
+}
+
+void Circle::SetIndices()
+{
+	unsigned int counter = 1;
+	int numIndices = this->GetIndexCount();
+	for (int i = 0; i < numIndices; i += 3)
+	{
+		this->indices[i] = 0;
+		this->indices[i + 1] = counter;
+		this->indices[i + 2] = counter + 1;
+		counter++;
+	}
+	this->indices[numIndices - 1] = 1;
+}
+
+void Circle::SetPositions()
+{
+	this->positions[0] = 0.0f;
+	this->positions[1] = 0.0f;
+
+	float currentAngle = 0;
+	int numVertices = this->GetVertexCount();
+	//std::cout << "x: " << this->positions[0] << ", y:" << this->positions[1] << std::endl;
+	for (int i = 6; i < numVertices; i += 6)
+	{
+		float currentAngleInRadians = glm::radians(currentAngle);
+		float x = this->radius * glm::cos(currentAngleInRadians);
+		float y = this->radius * glm::sin(currentAngleInRadians);
+		this->positions[i] = x;
+		this->positions[i + 1] = y;
+
+
+		currentAngle += deltaAngle;
+
+		//std::cout << "x: " << this->positions[i] << ", y:" << this->positions[i + 1] << std::endl;
+	}
+
 }

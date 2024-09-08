@@ -19,6 +19,7 @@ void UserInterface::NewFrame()
 
 void UserInterface::DrawObjectComponents()
 {
+    ImGui::Begin("Components");
     for (Component* component : this->gameObjectToDisplay->GetAllComponents())
     {
         component->DisplayComponent();

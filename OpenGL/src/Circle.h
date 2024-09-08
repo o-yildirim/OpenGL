@@ -11,6 +11,8 @@ public:
 
 	void InitBuffers() override;
 	bool isInside(float x, float y) override;
-	unsigned int GetVertexCount();
-	unsigned int GetIndexCount();
+	void SetPositions() override;
+	void SetIndices() override;
+	size_t GetVertexCount() override;
+	size_t GetIndexCount();
 };

@@ -1,11 +1,15 @@
 #pragma once
 #include "imgui/imgui.h"
+#include <typeinfo>
+#include <string>
+
 class GameObject;
 
 class Component 
 {
 protected:
 	bool disabled = false;
+	const char* _className;
 	GameObject* parent;
 
 public:
