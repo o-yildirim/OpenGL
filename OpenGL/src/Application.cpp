@@ -24,6 +24,13 @@
 #include "glm/glm.hpp"
 
 
+/*
+void SetupSampleScene(Scene* sampleScene)
+{
+    //TODO
+}
+*/
+
 int main(void)
 {
     GLFWwindow* window;
@@ -53,6 +60,8 @@ int main(void)
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     
+    //Scene sampleScene;
+    //SetupSampleScene(&sampleScene);
 
     Input input(window);
     UserInterface userInterface(window);

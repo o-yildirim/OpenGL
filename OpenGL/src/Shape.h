@@ -50,7 +50,7 @@ public:
                 this->positions[i + 3] = this->color[colorIndex++];//a
                 colorIndex = 0;
             }      
-            this->vertexBuffer.AddData(this->positions, this->GetVertexCount() * sizeof(float));
+            this->vertexBuffer.UpdateData(this->positions, this->GetVertexCount() * sizeof(float));
     }
 
     virtual void DisplayComponent()

@@ -138,7 +138,6 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Circle.cpp" />
-    <ClCompile Include="src\ErrorHandling.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Input.cpp" />
@@ -166,7 +165,6 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Circle.h" />
     <ClInclude Include="src\Component.h" />
-    <ClInclude Include="src\ErrorHandling.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\Input.h" />

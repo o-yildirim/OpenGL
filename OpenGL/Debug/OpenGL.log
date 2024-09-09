@@ -1,24 +1,10 @@
 ﻿  Application.cpp
-  Circle.cpp
-  IndexBuffer.cpp
   Picking.cpp
-  Rectangle.cpp
-  Renderer.cpp
-  Shader.cpp
-  Texture.cpp
-  VertexArray.cpp
-  VertexBuffer.cpp
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\VertexArray.cpp(43,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Circle.cpp(53,11): warning C4244: 'return': conversion from 'float' to 'size_t', possible loss of data
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Circle.cpp(58,11): warning C4244: 'return': conversion from 'float' to 'size_t', possible loss of data
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Picking.cpp(79,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(37,21): warning C4018: '<': signed/unsigned mismatch
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library

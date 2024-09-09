@@ -15,4 +15,5 @@ public:
 	void SetIndices() override;
 	size_t GetVertexCount() override;
 	size_t GetIndexCount();
+
 };
