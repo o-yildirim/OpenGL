@@ -61,9 +61,26 @@ size_t Circle::GetVertexCount()
 bool Circle::isInside(float x, float y)
 {
 	Transform* transform = this->GetParent()->GetComponent<Transform>();
-	float distance = glm::distance(glm::vec2(x,y), glm::vec2(transform->position.x,transform->position.y));
-	std::cout << distance << std::endl;
-	if (distance <= this->radius)
+
+
+	float halfLengthX = (this->radius * transform->scale.x);
+	float halfLengthY = (this->radius * transform->scale.y);
+
+
+	float relX = x - transform->position.x;
+	float relY = y - transform->position.y;
+
+
+
+	float angle = glm::radians(transform->rotation.z);
+
+
+	float rotatedX = relX * glm::cos(angle) + relY * glm::sin(angle);
+	float rotatedY = -relX * glm::sin(angle) + relY * glm::cos(angle);
+
+
+	if (rotatedX >= -halfLengthX && rotatedX <= halfLengthX &&
+		rotatedY >= -halfLengthY && rotatedY <= halfLengthY)
 	{
 		std::cout << "Inside circle." << std::endl;
 		return true;

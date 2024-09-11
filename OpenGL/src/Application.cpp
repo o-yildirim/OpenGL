@@ -74,8 +74,10 @@ int main(void)
         camera.AddComponent<Camera>();
                                     
 
-        Shader shader("res/shaders/Basic.shader");
-        shader.Bind();
+        Shader wireframeShader("res/shaders/ColorlessBasic.shader");
+
+        Shader coloredShader("res/shaders/Basic.shader");
+        coloredShader.Bind();
  
 
 
@@ -137,15 +139,29 @@ int main(void)
             userInterface.DrawObjectComponents();
             userInterface.EndFrame();
             
+          
 
+            //Render shapes.
+            coloredShader.Bind();
             for (GameObject* object : objectsToRender)
             {
                 Transform* transform = object->GetComponent<Transform>();
                 transform->Update();
                 glm::mat4 mvp = camera.GetComponent<Camera>()->GetProjectionMatrix() * camera.GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
-                shader.Bind();
-                shader.SetUniformMat4f("u_ModelViewProjection", mvp);
-                renderer.Draw(*object, shader);
+                coloredShader.SetUniformMat4f("u_ModelViewProjection", mvp);
+                renderer.Draw(*object, coloredShader);
+            }
+            
+
+            //Render picked object wireframes.
+            wireframeShader.Bind();
+            //std::cout << picking.GetSelectedObjects().size() << std::endl;
+            for (GameObject* pickedObject : picking.GetSelectedObjects())
+            {
+                Transform* transform = pickedObject->GetComponent<Transform>();
+                glm::mat4 mvp = camera.GetComponent<Camera>()->GetProjectionMatrix() * camera.GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
+                wireframeShader.SetUniformMat4f("u_ModelViewProjection", mvp);
+                renderer.DrawWireframe(*pickedObject, wireframeShader);
             }
 
 

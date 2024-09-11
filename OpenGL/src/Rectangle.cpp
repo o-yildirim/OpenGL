@@ -39,18 +39,42 @@ void Rectangle::InitBuffers()
 
 bool Rectangle::isInside(float x, float y)
 {
-    Transform* transform = this->GetParent()->GetComponent<Transform>();
 
-    if (x >= transform->position.x - this->xLength / 2.0f && x <= transform->position.x + this->xLength/2.0f)
+    
+    Transform* transform = this->GetParent()->GetComponent<Transform>();
+  
+
+    float halfLengthX = (xLength * transform->scale.x) / 2.0f;
+    float halfLengthY = (yLength * transform->scale.y) / 2.0f;
+
+
+    float relX = x - transform->position.x;
+    float relY = y - transform->position.y;
+
+
+
+    float angle = glm::radians(transform->rotation.z);
+
+
+    float rotatedX = relX * glm::cos(angle) + relY * glm::sin(angle);
+    float rotatedY = -relX * glm::sin(angle) + relY * glm::cos(angle);
+
+
+    if (rotatedX >= -halfLengthX && rotatedX <= halfLengthX &&
+        rotatedY >= -halfLengthY && rotatedY <= halfLengthY)
     {
-        if (y >= transform->position.y - this->yLength / 2.0f && y <= transform->position.y + this->yLength / 2.0f)
-        {
-            std::cout << "Inside square." << std::endl;
-            return true;
-        }
+        std::cout << "Inside square." << std::endl;
+        return true;
     }
     return false;
+
+
+
+
 }
+
+
+
 
 
 void Rectangle::SetPositions()

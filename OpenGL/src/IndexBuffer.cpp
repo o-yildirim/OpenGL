@@ -3,7 +3,7 @@
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
     :m_Count(count)
 {
-    ASSERT(sizeof(unsigned int) == sizeof(GLuint));
+    static_assert(sizeof(unsigned int) == sizeof(GLuint), "Size of unsigned int in this system is not equal to GLuint!");
     glGenBuffers(1, &m_RendererID); //Init buffer and store the id of it.
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_RendererID); //Select the buffer you want to use data in. (Draw with buffer with id 5 for instance). It is a basic array.
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->m_Count * sizeof(unsigned int), data, GL_STATIC_DRAW);
@@ -12,7 +12,7 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 IndexBuffer::IndexBuffer()
     :m_Count(0)
 {
-    ASSERT(sizeof(unsigned int) == sizeof(GLuint));
+    static_assert(sizeof(unsigned int) == sizeof(GLuint),"Size of unsigned int in this system is not equal to GLuint!");
     glGenBuffers(1, &m_RendererID); //Init buffer and store the id of it.
 }
 

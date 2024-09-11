@@ -15,6 +15,9 @@ public:
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scale;
+	glm::vec3 up;
+	glm::vec3 right;
+	glm::vec3 forward;
 public:
 	Transform();
 	~Transform();
@@ -27,4 +30,6 @@ public:
 	void DisplayComponent() override;
 	//inline GameObject* GetParent() { return this->parent; }
 	//inline void SetParent(GameObject* parent) { this->parent = parent; }
+private:
+	void UpdateDirectionVectors();
 };

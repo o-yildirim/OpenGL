@@ -31,11 +31,9 @@ void Picking::Update(std::vector<GameObject*> renderedObjects)
 				{
 					this->_pickedObjects.clear();
 					this->_initialPositionDifs.clear();
-					//TODO remove boundaries.
 				}
 				this->_pickedObjects.push_back(closest);
 				this->_status = Picking::Picked;
-				//TODO render boundaries.
 			}
 			else
 			{

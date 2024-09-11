@@ -12,6 +12,7 @@ Transform::Transform()
 	this->position = glm::vec3(center.x, center.y, 0.0f);
 	this->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    this->UpdateDirectionVectors();
 }
 
 
@@ -44,6 +45,9 @@ void Transform::Rotate(float angle,glm::vec3 axisToRotateAround)
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->rotation.x),glm::vec3(1,0,0));
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->rotation.y), glm::vec3(0, 1, 0));
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->rotation.z), glm::vec3(0, 0, 1));
+
+
+    
 }
 
 void Transform::Scale(glm::vec3 newScale)
@@ -63,6 +67,8 @@ void Transform::Update()
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->rotation.y), glm::vec3(0, 1, 0));
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->rotation.z), glm::vec3(0, 0, 1));
 	this->modelMatrix = glm::scale(this->modelMatrix, this->scale);
+
+    UpdateDirectionVectors();
 }
 
 void Transform::ResetModelMatrix()
@@ -133,3 +139,36 @@ void Transform::DisplayComponent()
         ImGui::PopItemWidth();
     }
 }
+
+
+void Transform::UpdateDirectionVectors()
+{
+        glm::mat4 rotationYaw = glm::rotate(glm::mat4(1.0f), glm::radians(this->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 rotationPitch = glm::rotate(glm::mat4(1.0f), glm::radians(this->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 rotationRoll = glm::rotate(glm::mat4(1.0f), glm::radians(this->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+
+        glm::mat4 rotationMatrix = rotationYaw * rotationPitch * rotationRoll;
+
+
+        this->forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+        this->right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
+        this->up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
+}
+
+
+/*
+void Transform::UpdateDirectionVectors()
+{
+    glm::vec2 right(1.0f,0.0f);
+    float angle = glm::radians(this->rotation.z);
+    float x_rotated = right.x * glm::cos(angle) - right.y * glm::sin(angle);
+    float y_rotated = right.x * glm::sin(angle) + right.y * glm::cos(angle);
+
+    this->right = glm::normalize(glm::vec3(x_rotated, y_rotated, 0.0f));
+
+
+    //this->forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+    //this->right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
+    //this->up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
+}*/

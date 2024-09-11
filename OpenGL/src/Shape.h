@@ -34,6 +34,7 @@ public:
 
 
     virtual inline void BindBuffers() { this->vertexArray.Bind(); this->vertexBuffer.Bind(); this->indexBuffer.Bind(); }
+    virtual inline void UnbindBuffers() { this->vertexArray.Unbind(); this->vertexBuffer.Unbind(); this->indexBuffer.Unbind(); }
     virtual inline VertexArray& GetVertexArray() { return this->vertexArray; }
     virtual inline VertexBuffer& GetVertexBuffer() { return this->vertexBuffer; }
     virtual inline IndexBuffer& GetIndexBuffer() { return this->indexBuffer; }
