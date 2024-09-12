@@ -1,14 +1,13 @@
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Application.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Application.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Camera.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Camera.obj
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Circle.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Circle.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\GameObject.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\IndexBuffer.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\IndexBuffer.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Input.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Picking.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Picking.obj
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Rectangle.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Rectangle.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Renderer.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Renderer.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Rigidbody.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Rigidbody.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Shader.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Shader.obj
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Shapes.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Shapes.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Texture.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Texture.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Transform.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\Transform.obj
 C:\Users\onyld\source\repos\OpenGL\OpenGL\src\UserInterface.cpp;C:\Users\onyld\source\repos\OpenGL\OpenGL\Debug\UserInterface.obj

@@ -16,8 +16,6 @@
 
 #include "UserInterface.h"
 #include "Window.h"
-#include "Rectangle.h"
-#include "Circle.h"
 #include "Input.h"
 #include "Picking.h"
 
@@ -137,6 +135,7 @@ int main(void)
 
             userInterface.NewFrame();
             userInterface.DrawObjectComponents();
+            userInterface.DrawAddComponentButton();
             userInterface.EndFrame();
             
           

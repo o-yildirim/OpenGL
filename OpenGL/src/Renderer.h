@@ -5,7 +5,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "GameObject.h"
-#include "Shape.h"
+#include "Shapes.h"
 
 class Renderer
 {

@@ -29,6 +29,19 @@ public:
 		}
 	}
 
+	template<typename T>
+	void AddComponent(T* component)
+	{
+		if (this->GetComponent<T>() == nullptr) // Cannot add the same component twice.
+		{
+			component->SetParent(this);
+			this->components.push_back(component);
+		}
+		else
+		{
+			std::cout << "GameObject already has that component!" << std::endl;
+		}
+	}
 
 
 	template<typename T>

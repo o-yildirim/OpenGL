@@ -3,7 +3,9 @@
 #include <typeinfo>
 #include <string>
 
+
 class GameObject;
+
 
 class Component 
 {
@@ -17,4 +19,5 @@ public:
 	virtual void DisplayComponent() {}
 	inline GameObject* GetParent() const { return this->parent; }
 	inline void SetParent(GameObject* parent) { this->parent = parent; }
+	
 };

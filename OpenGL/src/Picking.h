@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "glm/glm.hpp"
 #include "Camera.h"
-#include "Shape.h"
+#include "Shapes.h"
 #include "Input.h"
 #include "Window.h"
 #include <vector>
