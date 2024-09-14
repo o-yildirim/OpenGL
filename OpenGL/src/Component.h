@@ -19,5 +19,6 @@ public:
 	virtual void DisplayComponent() {}
 	inline GameObject* GetParent() const { return this->parent; }
 	inline void SetParent(GameObject* parent) { this->parent = parent; }
+	const inline char* GetClassName() { return this->_className; }
 	
 };

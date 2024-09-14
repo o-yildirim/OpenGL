@@ -17,7 +17,6 @@ private:
 	ImGuiIO io;
 	GLFWwindow* window;
 	GameObject* gameObjectToDisplay;
-	static const std::unordered_map<std::string, std::function<Component* ()>> componentMap;
 
 
 public:
@@ -29,6 +28,8 @@ public:
 	void Terminate();
 	void DrawAddComponentButton();
 	void DisplayComponentSelectionMenu();
+	void DisplayThreeDotsPopup(Component* component);
+	void DrawComponent(Component* component);
 
 	inline void SetGameObject(GameObject* obj) { this->gameObjectToDisplay = obj; }
 	inline GameObject* GetGameObject() { return this->gameObjectToDisplay; }

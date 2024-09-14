@@ -121,6 +121,11 @@ int main(void)
                 
             }
 
+            if (Input::GetKeyDown(Keys::Space))
+            {
+                circle.RemoveComponent<Circle>();
+            }
+
             
             picking.Update(objectsToRender);
             

@@ -1,2 +1,3 @@
 ﻿  UserInterface.cpp
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\GameObject.h(53,21): warning C4018: '<': signed/unsigned mismatch
   OpenGL.vcxproj -> C:\Users\onyld\source\repos\OpenGL\Debug\OpenGL.exe

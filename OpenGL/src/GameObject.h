@@ -32,14 +32,16 @@ public:
 	template<typename T>
 	void AddComponent(T* component)
 	{
-		if (this->GetComponent<T>() == nullptr) // Cannot add the same component twice.
+		std::cout << "Will look for " << typeid(T).name() << " in GetComponent. "<< std::endl;
+		if(this->GetComponent<T>() == nullptr) // Ensure no duplicate component type
 		{
 			component->SetParent(this);
 			this->components.push_back(component);
 		}
 		else
 		{
-			std::cout << "GameObject already has that component!" << std::endl;
+			std::cout << "GameObject already has "<< typeid(T).name() << std::endl;
+			delete component;
 		}
 	}
 
@@ -47,15 +49,27 @@ public:
 	template<typename T>
 	T* GetComponent()
 	{
+
 		for (int i = 0; i < this->components.size(); i++)
 		{
-			T* component = dynamic_cast<T*>(this->components[i]); //Attempt to cast component[i] to T
+			T* component = dynamic_cast<T*>(this->components[i]);
 			if (component != nullptr)
 			{
 				return component; // Return the component if it matches type T
 			}
 		}
 		return nullptr;
+	}
+
+	template<typename T>
+	void RemoveComponent()
+	{
+		T* component = this->GetComponent<T>();
+		if (component)
+		{
+			this->components.erase(std::remove(this->components.begin(), this->components.end(), component), this->components.end());
+			std::cout << "Component removed!" << std::endl;
+		}
 	}
 
 	inline std::vector<Component*> GetAllComponents() { return this->components; }

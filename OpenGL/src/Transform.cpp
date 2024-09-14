@@ -83,8 +83,6 @@ glm::mat4 Transform::getModelMatrix()
 
 void Transform::DisplayComponent()
 {
-    if (ImGui::CollapsingHeader(this->_className, ImGuiTreeNodeFlags_DefaultOpen))
-    {
         //Position
         ImGui::PushItemWidth(this->inputBoxLength);
         ImGui::Text("Position");
@@ -137,7 +135,7 @@ void Transform::DisplayComponent()
         ImGui::SameLine();
         ImGui::InputFloat("##scaleZ", &this->scale.z, 0.0f, 0.0f, "%.3f");
         ImGui::PopItemWidth();
-    }
+    
 }
 
 

@@ -1,11 +1,6 @@
 #include "UserInterface.h"
 
-static const std::unordered_map<std::string, std::function<Component*()>> componentMap =
-{
-    {"Circle", []() -> Circle* { return new Circle(); }},
-    {"Rectangle",[]() -> Rectangle* { return new Rectangle(); }},
-    {"Camera", []() -> Camera* { return new Camera(); }},
-};
+
 
 UserInterface::UserInterface(GLFWwindow* window)
 {
@@ -28,8 +23,60 @@ void UserInterface::DrawObjectComponents()
     ImGui::Begin("Components");
     for (Component* component : this->gameObjectToDisplay->GetAllComponents())
     {
-        component->DisplayComponent();
+        this->DrawComponent(component);
+         
     }
+}
+
+void UserInterface::DrawComponent(Component* component)
+{
+    if (ImGui::CollapsingHeader(component->GetClassName(), ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (strcmp("Transform", component->GetClassName()) != 0)
+        {
+        
+            ImGui::SameLine();
+            if (ImGui::Button("..."))
+            {
+                std::string popupId = "RemoveComponentDropdown_" + std::string(component->GetClassName());
+                ImGui::OpenPopup(popupId.c_str());
+
+            }
+            this->DisplayThreeDotsPopup(component);
+        }
+        
+        component->DisplayComponent();
+        
+    }
+}
+
+void UserInterface::DisplayThreeDotsPopup(Component* component)
+{
+    const std::unordered_map<const char*, std::function<void()>> componentMap =
+    {
+        {"Circle", [this]() {this->gameObjectToDisplay->RemoveComponent<Circle>(); }},
+        {"Rectangle",[this]() {this->gameObjectToDisplay->RemoveComponent<Rectangle>(); }},
+        {"Camera",[this]() {this->gameObjectToDisplay->RemoveComponent<Camera>(); }},
+    };
+
+    std::string popupId = "RemoveComponentDropdown_" + std::string(component->GetClassName());
+    if (ImGui::BeginPopup(popupId.c_str()))
+    {
+        if (ImGui::MenuItem("Remove Component"))
+        {
+            for (const auto& pair : componentMap)
+            {
+                if (strcmp(pair.first, component->GetClassName())==0)
+                {
+                    pair.second();
+                    break;
+                }
+
+            }
+        }
+        ImGui::EndPopup();
+    }
+    
 }
 
 void UserInterface::DrawAddComponentButton()
@@ -43,7 +90,6 @@ void UserInterface::DrawAddComponentButton()
 
     if (ImGui::Button("Add Component")) 
     {
-        std::cout << "Button clicked." << std::endl;
         ImGui::OpenPopup("AddComponentDropdown");
     }
     DisplayComponentSelectionMenu();
@@ -51,17 +97,22 @@ void UserInterface::DrawAddComponentButton()
 
 void UserInterface::DisplayComponentSelectionMenu()
 {
-    //TODO HERE
     if (ImGui::BeginPopup("AddComponentDropdown"))
     {
-        if (ImGui::MenuItem("Option 1")) {
-            std::cout << "Option 1 selected!" << std::endl;
-        }
-        if (ImGui::MenuItem("Option 2")) {
-            std::cout << "Option 2 selected!" << std::endl;
-        }
-        if (ImGui::MenuItem("Option 3")) {
-            std::cout << "Option 3 selected!" << std::endl;
+        const std::unordered_map<const char*, std::function<void()>> componentMap =
+        {
+            {"Circle", [this](){this->gameObjectToDisplay->AddComponent<Circle>(); }},
+            {"Rectangle",[this](){this->gameObjectToDisplay->AddComponent<Rectangle>(); }},
+            {"Camera",[this](){this->gameObjectToDisplay->AddComponent<Camera>(); }},
+        };
+
+        for (const auto& pair : componentMap) 
+        {
+            if (ImGui::MenuItem(pair.first))
+            {
+                pair.second();
+            }
+            
         }
         ImGui::EndPopup();
     }

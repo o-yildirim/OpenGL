@@ -50,15 +50,13 @@ public:
 
     virtual void DisplayComponent()
     {
-        if (ImGui::CollapsingHeader(this->_className, ImGuiTreeNodeFlags_DefaultOpen))//If not minimized.
-        {
-            if (ImGui::ColorEdit4("Color", this->color)) //If color is changed, render with new color.
-            {
+           if (ImGui::ColorEdit4("Color", this->color)) //If color is changed, render with new color.
+           {
                 std::cout << this->color[0] << ", " << this->color[1] << ", " << this->color[2] << ", " << this->color[3] << std::endl;
                 this->SetColor();
-            }
+           }
 
-        }
+        
     }
 
     virtual void SetIndices() { }
