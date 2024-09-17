@@ -6,8 +6,9 @@
 class Input
 {
 public:
-	Input(GLFWwindow* window);
+	
 public:
+	static void Init(GLFWwindow* window);
 	static bool GetKeyDown(Keys key);
 	static bool GetKeyHeld(Keys key);
 	static bool GetKeyUp(Keys key);

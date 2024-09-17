@@ -14,7 +14,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-#include "UserInterface.h"
+#include "ComponentUI.h"
 #include "Window.h"
 #include "Input.h"
 #include "Picking.h"
@@ -38,8 +38,8 @@ int main(void)
         return -1;
 
 
-
-    window = glfwCreateWindow(Window::GetWidth(), Window::GetHeight(), "Soy estupido", NULL, NULL);
+    Window::Init();
+    window = glfwCreateWindow(Window::GetWidth(), Window::GetHeight(), "Window", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -55,14 +55,13 @@ int main(void)
         std::cout << "Error";
     }
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
-
-    
+   
+    Input::Init(window);
+    ComponentUI::Init(window);
     //Scene sampleScene;
     //SetupSampleScene(&sampleScene);
-
-    Input input(window);
-    UserInterface userInterface(window);
+    
+    
 
     //BELOW MAIN PROGRAM.
     {
@@ -84,7 +83,7 @@ int main(void)
         square.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
 
 
-        userInterface.SetGameObject(&square);
+        ComponentUI::SetGameObject(&square);
         
         GameObject circle;
         circle.AddComponent<Circle>();
@@ -115,33 +114,30 @@ int main(void)
             lastFrame = currentFrame;
             if (currentFrame - lastTime >= 1.0)
             {
-                std::cout << numFrames << std::endl;
+                //std::cout << numFrames << std::endl;
                 numFrames = 0;
                 lastTime = currentFrame;
                 
             }
 
-            if (Input::GetKeyDown(Keys::Space))
+           /* if (Input::GetKeyDown(Keys::Space))
             {
                 circle.RemoveComponent<Circle>();
             }
-
+            */
             
             picking.Update(objectsToRender);
             
 
             if (picking.GetSelectedObjects().size() == 1)
             {
-                userInterface.SetGameObject(picking.GetSelectedObjects()[0]);
+                ComponentUI::SetGameObject(picking.GetSelectedObjects()[0]);
             }
             
 
             renderer.Clear();
 
-            userInterface.NewFrame();
-            userInterface.DrawObjectComponents();
-            userInterface.DrawAddComponentButton();
-            userInterface.EndFrame();
+            
             
           
 
@@ -167,9 +163,12 @@ int main(void)
                 wireframeShader.SetUniformMat4f("u_ModelViewProjection", mvp);
                 renderer.DrawWireframe(*pickedObject, wireframeShader);
             }
-
-
-            userInterface.Render();
+            
+            ComponentUI::NewFrame();
+            ComponentUI::DrawObjectComponents();
+            ComponentUI::DrawAddComponentButton();
+            ComponentUI::EndFrame();
+            ComponentUI::Render();
             Input::Update();
             
 
@@ -183,7 +182,7 @@ int main(void)
 
     }
 
-    userInterface.Terminate();
+    ComponentUI::Terminate();
     glfwTerminate();
     return 0;
 }

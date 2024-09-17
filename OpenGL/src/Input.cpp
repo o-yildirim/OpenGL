@@ -40,21 +40,21 @@ void Input::MouseButtonCallback(GLFWwindow* window, int button, int action, int 
 	}
 }
 
-Input::Input(GLFWwindow* window)
+void Input::Init(GLFWwindow* window)
 {
 	std::vector<Keys> keys = InputWrapperUtil::GetAllKeys();
 	for (Keys key : keys)
 	{
-		this->m_PreviousFrameKeyStates[key] = false;
-		this->m_CurrentKeyStates[key] = false;
+		m_PreviousFrameKeyStates[key] = false;
+		m_CurrentKeyStates[key] = false;
 	}
 	glfwSetKeyCallback(window, KeyCallback);
 
 	std::vector<MouseButtons> mouseButtons = InputWrapperUtil::GetAllMouseButtons();
 	for (MouseButtons button : mouseButtons)
 	{
-		this->m_PreviousFrameMouseButtonStates[button] = false;
-		this->m_CurrentMouseButtonStates[button] = false;
+		m_PreviousFrameMouseButtonStates[button] = false;
+		m_CurrentMouseButtonStates[button] = false;
 	}
 	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 
