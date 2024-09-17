@@ -15,6 +15,7 @@
 #include "Camera.h"
 
 #include "ComponentUI.h"
+#include "EditorUI.h"
 #include "Window.h"
 #include "Input.h"
 #include "Picking.h"
@@ -57,7 +58,7 @@ int main(void)
 
    
     Input::Init(window);
-    ComponentUI::Init(window);
+    EditorUI::Init(window);
     //Scene sampleScene;
     //SetupSampleScene(&sampleScene);
     
@@ -164,11 +165,14 @@ int main(void)
                 renderer.DrawWireframe(*pickedObject, wireframeShader);
             }
             
-            ComponentUI::NewFrame();
+            EditorUI::NewFrame();
+            
             ComponentUI::DrawObjectComponents();
             ComponentUI::DrawAddComponentButton();
-            ComponentUI::EndFrame();
-            ComponentUI::Render();
+
+
+            EditorUI::EndFrame();
+            EditorUI::Render();
             Input::Update();
             
 
@@ -182,7 +186,7 @@ int main(void)
 
     }
 
-    ComponentUI::Terminate();
+    EditorUI::Terminate();
     glfwTerminate();
     return 0;
 }

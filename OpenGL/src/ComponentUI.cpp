@@ -1,23 +1,7 @@
 #include "ComponentUI.h"
 
-const char* ComponentUI::_glsl_version = "#version 460";
+
 GameObject* ComponentUI::_gameObjectToDisplay;
-//ImGuiIO& ComponentUI::_io;
-
-void ComponentUI::Init(GLFWwindow* window)
-{
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(_glsl_version);
-}
-
-void ComponentUI::NewFrame()
-{
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
 
 void ComponentUI::DrawObjectComponents()
 {
@@ -129,20 +113,3 @@ void ComponentUI::DisplayComponentSelectionMenu()
     }
 }
 
-void ComponentUI::Render()
-{
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void ComponentUI::Terminate()
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-}
-
-void ComponentUI::EndFrame()
-{
-    ImGui::End();
-}
