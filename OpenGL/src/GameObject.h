@@ -8,9 +8,11 @@ class GameObject
 {
 private:
 	std::vector<Component*> components;
+	std::vector<GameObject*> _children;
+	std::string _name;
 
 public:
-	GameObject();
+	GameObject(std::string name);
 	~GameObject();
 
 
@@ -73,5 +75,11 @@ public:
 	}
 
 	inline std::vector<Component*> GetAllComponents() { return this->components; }
+	inline const std::string GetName() const { return this->_name; }
+	inline void SetName(std::string name) { this->_name = name; }
 
+	inline const std::vector<GameObject*>& GetChildren() const { return this->_children; }
+	void AddChild(GameObject* obj); 
+	void RemoveChild(GameObject* obj); 
+	bool IsChild(GameObject* obj); 
 };

@@ -14,8 +14,10 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-#include "ComponentUI.h"
+
 #include "EditorUI.h"
+#include "ComponentUI.h"
+#include "SceneUI.h"
 #include "Window.h"
 #include "Input.h"
 #include "Picking.h"
@@ -23,12 +25,31 @@
 #include "glm/glm.hpp"
 
 
-/*
-void SetupSampleScene(Scene* sampleScene)
+
+void SetupSampleScene(Scene& sampleScene)
 {
-    //TODO
+
+    GameObject* square = new GameObject("Square");
+    square->AddComponent<Rectangle>();
+    square->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
+    sampleScene.AddObject(square);
+
+    ComponentUI::SetGameObject(square);
+
+    GameObject* circle = new GameObject("Circle");
+    circle->AddComponent<Circle>();
+    circle->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
+    //sampleScene.AddObject(circle);
+
+    square->AddChild(circle);
+    GameObject* empty = new GameObject("Empty_c_child");
+    circle->AddChild(empty);
+    
+    GameObject* empty2 = new GameObject("Empty2");
+    sampleScene.AddObject(empty2);
+
 }
-*/
+
 
 int main(void)
 {
@@ -59,18 +80,19 @@ int main(void)
    
     Input::Init(window);
     EditorUI::Init(window);
-    //Scene sampleScene;
-    //SetupSampleScene(&sampleScene);
-    
+    Scene sampleScene("Sample Scene");
+    SetupSampleScene(sampleScene);
+    SceneUI::SetCurrentScene(&sampleScene);
     
 
     //BELOW MAIN PROGRAM.
     {
       
-
-        GameObject camera;
-        camera.AddComponent<Camera>();
-                                    
+        
+        GameObject* camera = new GameObject("Camera");
+        camera->AddComponent<Camera>();
+        sampleScene.AddObject(camera);
+                                
 
         Shader wireframeShader("res/shaders/ColorlessBasic.shader");
 
@@ -78,27 +100,24 @@ int main(void)
         coloredShader.Bind();
  
 
-
-        GameObject square;
+        /*
+        GameObject square("Square");
         square.AddComponent<Rectangle>();
         square.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
 
 
         ComponentUI::SetGameObject(&square);
         
-        GameObject circle;
+        GameObject circle("Circle");
         circle.AddComponent<Circle>();
         circle.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
      
-
-        std::vector<GameObject*> objectsToRender;
-        objectsToRender.push_back(&circle);
-        objectsToRender.push_back(&square);
+        */
 
         
         Renderer renderer;
         Picking picking;
-        picking.SetCamera(camera.GetComponent<Camera>());
+        picking.SetCamera(camera->GetComponent<Camera>());
 
         double currentFrame = glfwGetTime();
         double lastFrame = currentFrame;
@@ -120,14 +139,8 @@ int main(void)
                 lastTime = currentFrame;
                 
             }
-
-           /* if (Input::GetKeyDown(Keys::Space))
-            {
-                circle.RemoveComponent<Circle>();
-            }
-            */
             
-            picking.Update(objectsToRender);
+            picking.Update(sampleScene.GetGameObjects());
             
 
             if (picking.GetSelectedObjects().size() == 1)
@@ -138,17 +151,18 @@ int main(void)
 
             renderer.Clear();
 
-            
-            
-          
-
+        
             //Render shapes.
             coloredShader.Bind();
-            for (GameObject* object : objectsToRender)
+            for (GameObject* object : sampleScene.GetGameObjects())
             {
                 Transform* transform = object->GetComponent<Transform>();
+                if (transform == nullptr)
+                {
+                    std::cout << "NULL" << std::endl;
+                }
                 transform->Update();
-                glm::mat4 mvp = camera.GetComponent<Camera>()->GetProjectionMatrix() * camera.GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
+                glm::mat4 mvp = camera->GetComponent<Camera>()->GetProjectionMatrix() * camera->GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
                 coloredShader.SetUniformMat4f("u_ModelViewProjection", mvp);
                 renderer.Draw(*object, coloredShader);
             }
@@ -160,16 +174,23 @@ int main(void)
             for (GameObject* pickedObject : picking.GetSelectedObjects())
             {
                 Transform* transform = pickedObject->GetComponent<Transform>();
-                glm::mat4 mvp = camera.GetComponent<Camera>()->GetProjectionMatrix() * camera.GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
+                if (transform == nullptr)
+                {
+                    std::cout << "NULL" << std::endl;
+                }
+                glm::mat4 mvp = camera->GetComponent<Camera>()->GetProjectionMatrix() * camera->GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
                 wireframeShader.SetUniformMat4f("u_ModelViewProjection", mvp);
                 renderer.DrawWireframe(*pickedObject, wireframeShader);
             }
             
             EditorUI::NewFrame();
             
+            //Display framerate TODO
+
             ComponentUI::DrawObjectComponents();
             ComponentUI::DrawAddComponentButton();
 
+            SceneUI::DrawSceneTree();
 
             EditorUI::EndFrame();
             EditorUI::Render();
