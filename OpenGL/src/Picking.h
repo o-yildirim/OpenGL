@@ -9,6 +9,13 @@
 
 class Picking
 {
+	
+
+private:
+	static std::vector<GameObject*> _pickedObjects;
+	static std::vector<glm::vec2> _initialPositionDifs;
+	static glm::vec2 _areaStartPoint;
+
 	enum PickingStatus
 	{
 		NotPicked,
@@ -17,18 +24,13 @@ class Picking
 		SelectingArea,
 		PickedMultipleObjects
 	};
-
-private:
-	std::vector<GameObject*> _pickedObjects;
-	std::vector<glm::vec2> _initialPositionDifs;
-	glm::vec2 _areaStartPoint;
-
-	Camera* _camera = nullptr;
-	enum PickingStatus _status = Picking::NotPicked;
+	static Camera* _camera;
+	static PickingStatus _status;
 public:
-	void Update(std::vector<GameObject*> renderedObjects);
-	GameObject* GetClosest(std::vector<GameObject*> renderedObjects, glm::vec2 point);
-	std::vector<GameObject*> GetAllWithinSelectedArea(std::vector<GameObject*> renderedObjects, glm::vec2 startPos, glm::vec2 endPos);
-	inline std::vector<GameObject*> GetSelectedObjects() { return this->_pickedObjects; }
-	inline void SetCamera(Camera* cam) { this->_camera = cam; }
+	
+	static void Update(std::vector<GameObject*> renderedObjects);
+	static GameObject* GetClosest(std::vector<GameObject*> renderedObjects, glm::vec2 point);
+	static std::vector<GameObject*> GetAllWithinSelectedArea(std::vector<GameObject*> renderedObjects, glm::vec2 startPos, glm::vec2 endPos);
+	inline static std::vector<GameObject*> GetSelectedObjects() { return _pickedObjects; }
+	inline static void SetCamera(Camera* cam) { if(cam != nullptr) _camera = cam; }
 };

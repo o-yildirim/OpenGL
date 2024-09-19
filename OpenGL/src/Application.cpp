@@ -29,25 +29,50 @@
 void SetupSampleScene(Scene& sampleScene)
 {
 
+
+    GameObject* camera = new GameObject("Camera");
+    camera->AddComponent<Camera>();
+    sampleScene.AddObject(camera);
+
     GameObject* square = new GameObject("Square");
     square->AddComponent<Rectangle>();
-    square->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
+    Transform* squareTransform = square->GetComponent<Transform>();
+    squareTransform->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
     sampleScene.AddObject(square);
 
     ComponentUI::SetGameObject(square);
 
     GameObject* circle = new GameObject("Circle");
     circle->AddComponent<Circle>();
-    circle->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
-    //sampleScene.AddObject(circle);
-
+    circle->GetComponent<Transform>()->Translate(glm::vec3(250.0f, 0.0f, 0.0f));
     square->AddChild(circle);
+
+    /*
+    circle->GetRoot();
+    
     GameObject* empty = new GameObject("Empty_c_child");
     circle->AddChild(empty);
     
+    empty->GetRoot();
+
+    
     GameObject* empty2 = new GameObject("Empty2");
     sampleScene.AddObject(empty2);
+    */
+}
 
+void calculateFpsAndDeltaTime(int* numFrames, double* currentFrame, double* lastFrame, double* lastTime, double* deltaTime)
+{   
+    (*numFrames)++;
+    *currentFrame = glfwGetTime();
+    *deltaTime = *currentFrame - *lastFrame;
+    *lastFrame = *currentFrame;
+    if (*currentFrame - *lastTime >= 1.0)
+    {
+        EditorUI::UpdateFramerate(*numFrames);
+        *numFrames = 0;
+        *lastTime = *currentFrame;
+    }
 }
 
 
@@ -84,113 +109,73 @@ int main(void)
     SetupSampleScene(sampleScene);
     SceneUI::SetCurrentScene(&sampleScene);
     
-
     //BELOW MAIN PROGRAM.
     {
-      
-        
-        GameObject* camera = new GameObject("Camera");
-        camera->AddComponent<Camera>();
-        sampleScene.AddObject(camera);
-                                
 
+                               
         Shader wireframeShader("res/shaders/ColorlessBasic.shader");
-
         Shader coloredShader("res/shaders/Basic.shader");
         coloredShader.Bind();
- 
-
-        /*
-        GameObject square("Square");
-        square.AddComponent<Rectangle>();
-        square.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
-
-
-        ComponentUI::SetGameObject(&square);
-        
-        GameObject circle("Circle");
-        circle.AddComponent<Circle>();
-        circle.GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x + 200.0f, Window::GetCenter().y, 0.0f));
-     
-        */
 
         
         Renderer renderer;
-        Picking picking;
-        picking.SetCamera(camera->GetComponent<Camera>());
+        std::vector<GameObject*> traversedScene = sampleScene.TraverseDepthFirst();
+        Camera* firstCam = nullptr;
+        for (GameObject* obj : traversedScene)
+        {
+            firstCam = obj->GetComponent<Camera>();
+            if (firstCam != nullptr) break;
+        }
+        Picking::SetCamera(firstCam);
 
         double currentFrame = glfwGetTime();
         double lastFrame = currentFrame;
         double deltaTime;
 
         int numFrames = 0;
+
         double lastTime = 0.0;
         
         while (!glfwWindowShouldClose(window))
         {
-            numFrames++;
-            currentFrame = glfwGetTime();
-            deltaTime = currentFrame - lastFrame;
-            lastFrame = currentFrame;
-            if (currentFrame - lastTime >= 1.0)
-            {
-                //std::cout << numFrames << std::endl;
-                numFrames = 0;
-                lastTime = currentFrame;
-                
-            }
+            calculateFpsAndDeltaTime(&numFrames, &currentFrame, &lastFrame, &lastTime, &deltaTime);
             
-            picking.Update(sampleScene.GetGameObjects());
+            Picking::Update(sampleScene.GetGameObjects());
             
 
-            if (picking.GetSelectedObjects().size() == 1)
+            if (Picking::GetSelectedObjects().size() == 1)
             {
-                ComponentUI::SetGameObject(picking.GetSelectedObjects()[0]);
+                ComponentUI::SetGameObject(Picking::GetSelectedObjects()[0]);
             }
             
 
             renderer.Clear();
 
         
-            //Render shapes.
-            coloredShader.Bind();
-            for (GameObject* object : sampleScene.GetGameObjects())
-            {
-                Transform* transform = object->GetComponent<Transform>();
-                if (transform == nullptr)
-                {
-                    std::cout << "NULL" << std::endl;
-                }
-                transform->Update();
-                glm::mat4 mvp = camera->GetComponent<Camera>()->GetProjectionMatrix() * camera->GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
-                coloredShader.SetUniformMat4f("u_ModelViewProjection", mvp);
-                renderer.Draw(*object, coloredShader);
-            }
+            
             
 
-            //Render picked object wireframes.
-            wireframeShader.Bind();
-            //std::cout << picking.GetSelectedObjects().size() << std::endl;
-            for (GameObject* pickedObject : picking.GetSelectedObjects())
+            if (firstCam != nullptr) 
             {
-                Transform* transform = pickedObject->GetComponent<Transform>();
-                if (transform == nullptr)
-                {
-                    std::cout << "NULL" << std::endl;
-                }
-                glm::mat4 mvp = camera->GetComponent<Camera>()->GetProjectionMatrix() * camera->GetComponent<Camera>()->GetViewMatrix() * transform->getModelMatrix();
-                wireframeShader.SetUniformMat4f("u_ModelViewProjection", mvp);
-                renderer.DrawWireframe(*pickedObject, wireframeShader);
+                //Render shapes.
+                renderer.RenderScene(sampleScene, coloredShader, firstCam);
+
+                //Render picked object wireframes.
+                renderer.RenderPicking(wireframeShader, firstCam);
             }
+
+           
             
             EditorUI::NewFrame();
-            
-            //Display framerate TODO
 
+            
+            
             ComponentUI::DrawObjectComponents();
             ComponentUI::DrawAddComponentButton();
 
             SceneUI::DrawSceneTree();
+
+            EditorUI::DisplayFrameRate();
 
             EditorUI::EndFrame();
             EditorUI::Render();

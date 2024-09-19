@@ -1,6 +1,7 @@
 #include "EditorUI.h"
 
 const char* EditorUI::_glsl_version = "#version 460";
+int EditorUI::framerate;
 
 void EditorUI::Init(GLFWwindow* window)
 {
@@ -33,4 +34,12 @@ void EditorUI::Terminate()
 void EditorUI::EndFrame()
 {
     ImGui::End();
+}
+
+
+
+void EditorUI::DisplayFrameRate()
+{
+    std::string frameRate = "Fps: " + std::to_string(framerate);
+    ImGui::Text(frameRate.c_str());
 }

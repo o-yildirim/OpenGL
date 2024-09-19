@@ -37,7 +37,6 @@ void Rectangle::InitBuffers()
 bool Rectangle::isInside(float x, float y)
 {
 
-
     Transform* transform = this->GetParent()->GetComponent<Transform>();
 
 

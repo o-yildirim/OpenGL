@@ -3,6 +3,51 @@
 #include <iostream>
 
 
+void Renderer::RenderScene(Scene& scene, Shader& shader, Camera* camera) const //TODO, create a material class and attach shaders to that. Not the entire scene.
+{
+    shader.Bind();
+
+    for (GameObject* object : scene.GetGameObjects())
+    {
+        RenderObjectRecursively(object, shader, camera, glm::mat4(1.0f));
+    }
+}
+
+void Renderer::RenderPicking(Shader& shader, Camera* camera) const //TODO, create a material class and attach shaders to that. Not the entire scene.
+{
+    shader.Bind();
+
+    for (GameObject* pickedObject : Picking::GetSelectedObjects())
+    {
+        Transform* transform = pickedObject->GetComponent<Transform>();
+        if (transform == nullptr)
+        {
+            std::cout << "NULL" << std::endl;
+        }
+        glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * transform->getModelMatrix();
+        shader.SetUniformMat4f("u_ModelViewProjection", mvp);
+        DrawWireframe(*pickedObject, shader);
+    }
+}
+
+
+void Renderer::RenderObjectRecursively(GameObject* object, Shader& shader, Camera* camera, const glm::mat4& parentTransform) const
+{
+    Transform* transform = object->GetComponent<Transform>();
+    transform->Update();
+    glm::mat4 modelMatrix = parentTransform * transform->getModelMatrix();
+
+    glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * modelMatrix;
+    shader.SetUniformMat4f("u_ModelViewProjection", mvp);
+    Draw(*object, shader);
+
+    for (GameObject* child : object->GetChildren()) // Assuming GetChildren() returns the list of children
+    {
+        RenderObjectRecursively(child, shader, camera, modelMatrix);
+    }
+
+}
+
 void Renderer::Draw(GameObject& object, const Shader& shader) const
 {
     //shader.Bind();

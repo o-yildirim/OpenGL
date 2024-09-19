@@ -1,19 +1,26 @@
 #include "Picking.h"
 
+std::vector<GameObject*> Picking::_pickedObjects;
+std::vector<glm::vec2> Picking::_initialPositionDifs;
+glm::vec2 Picking::_areaStartPoint;
+
+Camera* Picking::_camera = nullptr;
+Picking::PickingStatus Picking::_status = Picking::NotPicked;
+
 void Picking::Update(std::vector<GameObject*> renderedObjects)
 {
 	if (Input::GetMouseButtonDown(MouseButtons::Left)) //TODO Burasinin icerisinin mantigini duzelt.
 	{	
 			glm::vec2 mousePos = Input::GetMousePosition();
-			glm::vec3 convertedMousePos = this->_camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
-			std::cout << "Clicked at " << convertedMousePos.x << ", " << convertedMousePos.y << std::endl;
-			GameObject* closest = this->GetClosest(renderedObjects, convertedMousePos);
+			glm::vec3 convertedMousePos = _camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+			//std::cout << "Clicked at " << convertedMousePos.x << ", " << convertedMousePos.y << std::endl;
+			GameObject* closest = GetClosest(renderedObjects, convertedMousePos);
 
 			if (closest)
 			{
-				if (this->_status == Picking::PickedMultipleObjects)
+				if (_status == Picking::PickedMultipleObjects)
 				{
-					for (GameObject* obj : this->_pickedObjects)
+					for (GameObject* obj : _pickedObjects)
 					{
 						if (obj == closest)
 						{
@@ -21,64 +28,63 @@ void Picking::Update(std::vector<GameObject*> renderedObjects)
 							return;
 						}
 					}
-					this->_pickedObjects.clear();
-					this->_initialPositionDifs.clear();
-					this->_pickedObjects.push_back(closest);
-					this->_status = Picking::Picked;
+					_pickedObjects.clear();
+					_initialPositionDifs.clear();
+					_pickedObjects.push_back(closest);
+					_status = PickingStatus::Picked;
 				}
 
-				if (this->_pickedObjects.size() != 0)
+				if (_pickedObjects.size() != 0)
 				{
-					this->_pickedObjects.clear();
-					this->_initialPositionDifs.clear();
+					_pickedObjects.clear();
+					_initialPositionDifs.clear();
 				}
-				this->_pickedObjects.push_back(closest);
-				this->_status = Picking::Picked;
+				_pickedObjects.push_back(closest);
+				_status = Picking::Picked;
 			}
 			else
 			{
-				this->_pickedObjects.clear();
-				this->_initialPositionDifs.clear();
-				this->_status = Picking::NotPicked;
-				std::cout << "Not picked" << std::endl;
-				//TODO remove boundaries.
+				_pickedObjects.clear();
+				_initialPositionDifs.clear();
+				_status = Picking::NotPicked;
+				//std::cout << "Not picked" << std::endl;
 			}
 		
 	}
 	else if(Input::GetMouseButtonHeld(MouseButtons::Left))
 	{
-		if (this->_status == Picking::NotPicked) //Then starts to selecting an area.
+		if (_status == Picking::NotPicked) //Then starts to selecting an area.
 		{
 			glm::vec2 mousePos = Input::GetMousePosition();
-			glm::vec3 convertedMousePos = this->_camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
-			this->_areaStartPoint = convertedMousePos;
-			this->_status = Picking::SelectingArea;
+			glm::vec3 convertedMousePos = _camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+			_areaStartPoint = convertedMousePos;
+			_status = Picking::SelectingArea;
 		}
-		else if (this->_status == Picking::Picked || this->_status == Picking::PickedMultipleObjects)
+		else if (_status == Picking::Picked || _status == Picking::PickedMultipleObjects)
 		{
 			glm::vec2 mousePos = Input::GetMousePosition();
-			glm::vec3 convertedMousePos = this->_camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+			glm::vec3 convertedMousePos = _camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
 
-			for (GameObject* pickedObj : this->_pickedObjects)
+			for (GameObject* pickedObj : _pickedObjects)
 			{
 				glm::vec3 objPos = pickedObj->GetComponent<Transform>()->position;
 				glm::vec2 initialPositionDif(convertedMousePos.x - objPos.x, convertedMousePos.y - objPos.y);
-				this->_initialPositionDifs.push_back(initialPositionDif);
+				_initialPositionDifs.push_back(initialPositionDif);
 			}
-			this->_status = Picking::Dragging;
+			_status = Picking::Dragging;
 		}
-		else if (this->_status == Picking::Dragging)
+		else if (_status == Picking::Dragging)
 		{
 			
 			//Keep repositioning untill mouse is released.
 			glm::vec2 mousePos = Input::GetMousePosition();
-			glm::vec3 convertedMousePos = this->_camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+			glm::vec3 convertedMousePos = _camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
 
-			for(int i = 0; i < this->_pickedObjects.size(); i++)
+			for(int i = 0; i < _pickedObjects.size(); i++)
 			{
-				Transform* objTransform = this->_pickedObjects[i]->GetComponent<Transform>();
+				Transform* objTransform = _pickedObjects[i]->GetComponent<Transform>();
 				glm::vec3 objPos = objTransform->position;
-				glm::vec3 newPos(convertedMousePos.x - this->_initialPositionDifs[i].x, convertedMousePos.y - this->_initialPositionDifs[i].y, 0.0f);
+				glm::vec3 newPos(convertedMousePos.x - _initialPositionDifs[i].x, convertedMousePos.y - _initialPositionDifs[i].y, 0.0f);
 				objTransform->position = newPos;
 				
 			}
@@ -86,39 +92,39 @@ void Picking::Update(std::vector<GameObject*> renderedObjects)
 	}
 	else if(Input::GetMouseButtonUp(MouseButtons::Left))
 	{
-		if (this->_status == Picking::Dragging)
+		if (_status == Picking::Dragging)
 		{
-			if (this->_pickedObjects.size() == 1)
+			if (_pickedObjects.size() == 1)
 			{
-				this->_status = Picking::Picked; //Stopped dragging but still picked.
+				_status = Picking::Picked; //Stopped dragging but still picked.
 			}
-			else if (this->_pickedObjects.size() > 1)
+			else if (_pickedObjects.size() > 1)
 			{
-				this->_status = Picking::PickedMultipleObjects;
+				_status = Picking::PickedMultipleObjects;
 			}
 		}
-		else if (this->_status == Picking::SelectingArea)
+		else if (_status == Picking::SelectingArea)
 		{
-			this->_pickedObjects.clear();
-			this->_initialPositionDifs.clear();
+			_pickedObjects.clear();
+			_initialPositionDifs.clear();
 
 			glm::vec2 mousePos = Input::GetMousePosition();
-			glm::vec3 convertedMousePos = this->_camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
-			this->_pickedObjects = this->GetAllWithinSelectedArea(renderedObjects,this->_areaStartPoint,glm::vec2(convertedMousePos.x, convertedMousePos.y));
+			glm::vec3 convertedMousePos = _camera->ConvertScreenToWorld(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+			_pickedObjects = GetAllWithinSelectedArea(renderedObjects,_areaStartPoint,glm::vec2(convertedMousePos.x, convertedMousePos.y));
 			
 			
 			
-			if (this->_pickedObjects.size() == 0)
+			if (_pickedObjects.size() == 0)
 			{
-				this->_status = Picking::NotPicked;
+				_status = Picking::NotPicked;
 			}
-			else if (this->_pickedObjects.size() == 1)
+			else if (_pickedObjects.size() == 1)
 			{
-				this->_status = Picking::Picked;
+				_status = Picking::Picked;
 			}
 			else
 			{
-				this->_status = Picking::PickedMultipleObjects;
+				_status = Picking::PickedMultipleObjects;
 			}
 		}
 	}

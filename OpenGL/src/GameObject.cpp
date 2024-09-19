@@ -23,6 +23,7 @@ void GameObject::AddChild(GameObject* obj)
     if (!this->IsChild(obj))
     {
         this->_children.push_back(obj);
+        obj->parent = this;
     }
 
 }
@@ -34,6 +35,7 @@ void GameObject::RemoveChild(GameObject* obj)
     if (it != this->_children.end())
     {
         this->_children.erase(it, _children.end());
+        obj->parent = nullptr;
     }
 }
 
@@ -46,4 +48,22 @@ bool GameObject::IsChild(GameObject* obj)
         return true;
     }
     return false;
+}
+
+void GameObject::GetRootHelper(GameObject* objToCheck, GameObject*& root)
+{
+    if (objToCheck->parent == nullptr)
+    {
+        root = objToCheck;
+        return;
+    }
+    GetRootHelper(objToCheck->parent, root);
+}
+
+GameObject* GameObject::GetRoot()
+{
+    GameObject* root = nullptr;
+    this->GetRootHelper(this,root);
+    std::cout << root->GetName() << std::endl;
+    return root;
 }

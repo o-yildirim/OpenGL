@@ -7,6 +7,7 @@ class Scene
 private:
 	std::vector<GameObject*> _objectsInTheScene;
 	std::string _name;
+	void TraverseDepthFirstHelper(GameObject* obj,std::vector<GameObject*>& vec);
 public:
 	Scene() {};
 	Scene(std::string name): _name(name) {}
@@ -31,8 +32,10 @@ public:
 		delete obj; //This object no longer exists within the scene.
  
 	}
-
+	
 	inline const std::string GetName() const { return this->_name; }
 	inline  void SetName(std::string name) {this->_name = name; }
+
+	std::vector<GameObject*> TraverseDepthFirst();
 };
 

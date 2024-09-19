@@ -9,7 +9,9 @@ class GameObject
 private:
 	std::vector<Component*> components;
 	std::vector<GameObject*> _children;
+	GameObject* parent = nullptr;
 	std::string _name;
+	void GetRootHelper(GameObject* obj, GameObject*& root);
 
 public:
 	GameObject(std::string name);
@@ -79,6 +81,8 @@ public:
 	inline void SetName(std::string name) { this->_name = name; }
 
 	inline const std::vector<GameObject*>& GetChildren() const { return this->_children; }
+	inline const GameObject* GetParent() { return this->parent; }
+	GameObject* GetRoot();
 	void AddChild(GameObject* obj); 
 	void RemoveChild(GameObject* obj); 
 	bool IsChild(GameObject* obj); 
