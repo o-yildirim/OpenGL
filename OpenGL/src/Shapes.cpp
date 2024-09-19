@@ -37,19 +37,19 @@ void Rectangle::InitBuffers()
 bool Rectangle::isInside(float x, float y)
 {
 
-    Transform* transform = this->GetParent()->GetComponent<Transform>();
+    //Transform* transform = this->GetParent()->GetComponent<Transform>();
+	Transform* objTransform = this->GetGameObject()->GetComponent<Transform>();
+	
+	std::cout << "Pos rect: " << objTransform->worldPosition.x << ", " << objTransform->worldPosition.y << ", " << objTransform->worldPosition.z<<std::endl;
+    float halfLengthX = (xLength * objTransform->worldScale.x) / 2.0f;
+    float halfLengthY = (yLength * objTransform->worldScale.y) / 2.0f;
 
 
-    float halfLengthX = (xLength * transform->scale.x) / 2.0f;
-    float halfLengthY = (yLength * transform->scale.y) / 2.0f;
+    float relX = x - objTransform->worldPosition.x;
+    float relY = y - objTransform->worldPosition.y;
 
 
-    float relX = x - transform->position.x;
-    float relY = y - transform->position.y;
-
-
-
-    float angle = glm::radians(transform->rotation.z);
+    float angle = glm::radians(objTransform->worldRotation.z);
 
 
     float rotatedX = relX * glm::cos(angle) + relY * glm::sin(angle);
@@ -154,19 +154,19 @@ size_t Circle::GetVertexCount()
 
 bool Circle::isInside(float x, float y)
 {
-	Transform* transform = this->GetParent()->GetComponent<Transform>();
+	//Transform* transform = this->GetParent()->GetComponent<Transform>();
+	Transform* objTransform = this->GetGameObject()->GetComponent<Transform>();
 
 
-	float halfLengthX = (this->radius * transform->scale.x);
-	float halfLengthY = (this->radius * transform->scale.y);
+	float halfLengthX = (this->radius * objTransform->worldScale.x);
+	float halfLengthY = (this->radius * objTransform->worldScale.y);
 
 
-	float relX = x - transform->position.x;
-	float relY = y - transform->position.y;
+	float relX = x - objTransform->worldPosition.x;
+	float relY = y - objTransform->worldPosition.y;
 
 
-
-	float angle = glm::radians(transform->rotation.z);
+	float angle = glm::radians(objTransform->worldRotation.z);
 
 
 	float rotatedX = relX * glm::cos(angle) + relY * glm::sin(angle);

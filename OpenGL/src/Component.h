@@ -12,13 +12,13 @@ class Component
 protected:
 	bool disabled = false;
 	const char* _className;
-	GameObject* parent;
+	GameObject* _gameObject;
 
 public:
 	virtual ~Component() = default; //Virtual destructor to make Component polymorphic. 
 	virtual void DisplayComponent() {}
-	inline GameObject* GetParent() const { return this->parent; }
-	inline void SetParent(GameObject* parent) { this->parent = parent; }
+	inline GameObject* GetGameObject() const { return this->_gameObject; }
+	inline void SetGameObject(GameObject* parent) { this->_gameObject = parent; }
 	const inline char* GetClassName() { return this->_className; }
 	
 };

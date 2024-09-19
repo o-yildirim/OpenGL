@@ -24,7 +24,7 @@ void Renderer::RenderPicking(Shader& shader, Camera* camera) const //TODO, creat
         {
             std::cout << "NULL" << std::endl;
         }
-        glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * transform->getModelMatrix();
+        glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * transform->GetModelMatrix();
         shader.SetUniformMat4f("u_ModelViewProjection", mvp);
         DrawWireframe(*pickedObject, shader);
     }
@@ -35,7 +35,7 @@ void Renderer::RenderObjectRecursively(GameObject* object, Shader& shader, Camer
 {
     Transform* transform = object->GetComponent<Transform>();
     transform->Update();
-    glm::mat4 modelMatrix = parentTransform * transform->getModelMatrix();
+    glm::mat4 modelMatrix = parentTransform * transform->GetModelMatrix();
 
     glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * modelMatrix;
     shader.SetUniformMat4f("u_ModelViewProjection", mvp);

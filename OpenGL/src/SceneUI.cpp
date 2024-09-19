@@ -32,7 +32,7 @@ void SceneUI::DrawSceneObj(GameObject* obj)
     {
         if (ImGui::Selectable(headerId.c_str()))
         {
-            glm::vec3 objPos = obj->GetComponent<Transform>()->position;
+            glm::vec3 objPos = obj->GetComponent<Transform>()->worldPosition;
             std::cout << std::to_string(reinterpret_cast<uintptr_t>(obj)) <<", pos: " << objPos.x << ", " << objPos.y << ", "<< objPos.z << std::endl;
             return;
         }

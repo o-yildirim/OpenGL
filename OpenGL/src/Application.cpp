@@ -34,18 +34,21 @@ void SetupSampleScene(Scene& sampleScene)
     camera->AddComponent<Camera>();
     sampleScene.AddObject(camera);
 
+    GameObject* circle = new GameObject("Circle");
+    circle->AddComponent<Circle>();
+    circle->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
+    sampleScene.AddObject(circle);
+
     GameObject* square = new GameObject("Square");
     square->AddComponent<Rectangle>();
     Transform* squareTransform = square->GetComponent<Transform>();
-    squareTransform->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
+    squareTransform->Translate(glm::vec3(200.0f,0.0f, 0.0f));
+    circle->AddChild(square);
     sampleScene.AddObject(square);
 
-    ComponentUI::SetGameObject(square);
+    ComponentUI::SetGameObject(circle);
 
-    GameObject* circle = new GameObject("Circle");
-    circle->AddComponent<Circle>();
-    circle->GetComponent<Transform>()->Translate(glm::vec3(250.0f, 0.0f, 0.0f));
-    square->AddChild(circle);
+    
 
     /*
     circle->GetRoot();

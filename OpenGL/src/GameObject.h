@@ -2,7 +2,7 @@
 #include "vector"
 #include <iostream>
 #include "Component.h"
-
+#include "Transform.h"
 
 class GameObject
 {
@@ -11,7 +11,7 @@ private:
 	std::vector<GameObject*> _children;
 	GameObject* parent = nullptr;
 	std::string _name;
-	void GetRootHelper(GameObject* obj, GameObject*& root);
+	
 
 public:
 	GameObject(std::string name);
@@ -24,7 +24,7 @@ public:
 		if (this->GetComponent<T>() == nullptr) //Cannot add the same component twice.
 		{
 			T* comp = new T();
-			comp->SetParent(this);
+			comp->SetGameObject(this);
 			this->components.push_back(comp);
 		}
 		else
@@ -39,7 +39,7 @@ public:
 		std::cout << "Will look for " << typeid(T).name() << " in GetComponent. "<< std::endl;
 		if(this->GetComponent<T>() == nullptr) // Ensure no duplicate component type
 		{
-			component->SetParent(this);
+			component->SetGameObject(this);
 			this->components.push_back(component);
 		}
 		else
@@ -81,8 +81,9 @@ public:
 	inline void SetName(std::string name) { this->_name = name; }
 
 	inline const std::vector<GameObject*>& GetChildren() const { return this->_children; }
-	inline const GameObject* GetParent() { return this->parent; }
-	GameObject* GetRoot();
+	inline GameObject* GetParent() const { return this->parent; }
+	
+	
 	void AddChild(GameObject* obj); 
 	void RemoveChild(GameObject* obj); 
 	bool IsChild(GameObject* obj); 

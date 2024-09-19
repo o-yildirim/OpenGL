@@ -67,7 +67,7 @@ void Picking::Update(std::vector<GameObject*> renderedObjects)
 
 			for (GameObject* pickedObj : _pickedObjects)
 			{
-				glm::vec3 objPos = pickedObj->GetComponent<Transform>()->position;
+				glm::vec3 objPos = pickedObj->GetComponent<Transform>()->localPosition;
 				glm::vec2 initialPositionDif(convertedMousePos.x - objPos.x, convertedMousePos.y - objPos.y);
 				_initialPositionDifs.push_back(initialPositionDif);
 			}
@@ -83,9 +83,9 @@ void Picking::Update(std::vector<GameObject*> renderedObjects)
 			for(int i = 0; i < _pickedObjects.size(); i++)
 			{
 				Transform* objTransform = _pickedObjects[i]->GetComponent<Transform>();
-				glm::vec3 objPos = objTransform->position;
+				glm::vec3 objPos = objTransform->localPosition;
 				glm::vec3 newPos(convertedMousePos.x - _initialPositionDifs[i].x, convertedMousePos.y - _initialPositionDifs[i].y, 0.0f);
-				objTransform->position = newPos;
+				objTransform->localPosition = newPos;
 				
 			}
 		}
@@ -142,7 +142,7 @@ std::vector<GameObject*> Picking::GetAllWithinSelectedArea(std::vector<GameObjec
 	float yLen = glm::abs(startPos.y - endPos.y);
 	for (GameObject* obj : renderedObjects)
 	{
-		glm::vec3 objPos = obj->GetComponent<Transform>()->position;
+		glm::vec3 objPos = obj->GetComponent<Transform>()->localPosition;
 		if (objPos.x > centerPos.x - xLen / 2.0f && objPos.x < centerPos.x + xLen / 2.0f)
 		{
 			if (objPos.y < centerPos.y + yLen / 2.0f && objPos.y > centerPos.y - yLen / 2.0f)

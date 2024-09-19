@@ -1,12 +1,12 @@
 #include <iostream>
 #include "GameObject.h"
-#include "Transform.h"
+
 
 GameObject::GameObject(std::string name)
     :_name(name)
 {
     this->AddComponent<Transform>();
-    this->GetComponent<Transform>()->SetParent(this);
+    this->GetComponent<Transform>()->SetGameObject(this);
 }
 
 GameObject::~GameObject()
@@ -50,20 +50,3 @@ bool GameObject::IsChild(GameObject* obj)
     return false;
 }
 
-void GameObject::GetRootHelper(GameObject* objToCheck, GameObject*& root)
-{
-    if (objToCheck->parent == nullptr)
-    {
-        root = objToCheck;
-        return;
-    }
-    GetRootHelper(objToCheck->parent, root);
-}
-
-GameObject* GameObject::GetRoot()
-{
-    GameObject* root = nullptr;
-    this->GetRootHelper(this,root);
-    std::cout << root->GetName() << std::endl;
-    return root;
-}
