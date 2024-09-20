@@ -39,7 +39,7 @@ void Renderer::RenderPicking(Shader& shader, Camera* camera) const //TODO, creat
     for (GameObject* pickedObject : Picking::GetSelectedObjects())
     {
         Transform* transform = pickedObject->GetComponent<Transform>();
-        glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * transform->GetLocalModelMatrix();
+        glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * transform->GetWorldModelMatrix();
         shader.SetUniformMat4f("u_ModelViewProjection", mvp);
         DrawWireframe(*pickedObject, shader);
     }
