@@ -15,5 +15,4 @@ To-do list:
 - Rendering textures.
 - Tilemaps.
 - Scripting engine.
-- Bugfix.
 - Refactoring.
