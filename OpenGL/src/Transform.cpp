@@ -5,8 +5,7 @@
 Transform::Transform()
 {
     this->_className = "Transform";
-
-	this->modelMatrix = glm::mat4(1.0f);
+	this->localModelMatrix = glm::mat4(1.0f);
 
 	glm::vec3 center = Window::GetCenter();
 	this->localPosition = glm::vec3(center.x, center.y, 0.0f);
@@ -23,16 +22,12 @@ Transform::~Transform()
 
 void Transform::Translate(glm::vec3 toPosition)
 {
-	this->ResetModelMatrix();
-
 	this->localPosition = toPosition;
-	this->modelMatrix = glm::translate(this->modelMatrix, this->localPosition);
+    this->MarkDirty();
 }
 
 void Transform::Rotate(float angle,glm::vec3 axisToRotateAround)
 {
-	this->ResetModelMatrix();
-
 	for (int i = 0; i < 3; i++)
 	{
 		if (axisToRotateAround[i] == 1)
@@ -41,107 +36,115 @@ void Transform::Rotate(float angle,glm::vec3 axisToRotateAround)
 			break;
 		}
 	}
-
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.x),glm::vec3(1,0,0));
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.y), glm::vec3(0, 1, 0));
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.z), glm::vec3(0, 0, 1));
-
-
-    
+    this->MarkDirty();
 }
 
 void Transform::Scale(glm::vec3 newScale)
 {
-	this->ResetModelMatrix();
-
 	this->localScale = newScale;
-	this->modelMatrix = glm::scale(this->modelMatrix, this->localScale);
+    this->MarkDirty();
 }
 
 void Transform::Update()
 {
-	this->ResetModelMatrix();
+    if (this->isDirty)
+    {
+        this->ResetModelMatrix();
 
-	this->modelMatrix = glm::translate(this->modelMatrix, this->localPosition);
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.x), glm::vec3(1, 0, 0));
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.y), glm::vec3(0, 1, 0));
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(this->localRotation.z), glm::vec3(0, 0, 1));
-	this->modelMatrix = glm::scale(this->modelMatrix, this->localScale);
+        
+        this->localModelMatrix = glm::translate(this->localModelMatrix, this->localPosition);
+        this->localModelMatrix = glm::rotate(this->localModelMatrix, glm::radians(this->localRotation.x), glm::vec3(1, 0, 0));
+        this->localModelMatrix = glm::rotate(this->localModelMatrix, glm::radians(this->localRotation.y), glm::vec3(0, 1, 0));
+        this->localModelMatrix = glm::rotate(this->localModelMatrix, glm::radians(this->localRotation.z), glm::vec3(0, 0, 1));
+        this->localModelMatrix = glm::scale(this->localModelMatrix, this->localScale);
 
-    UpdateDirectionVectors();
 
-    glm::mat4 worldTransformation = this->GetWorldTransformationMatrix();
-    this->worldPosition = this->GetWorldPosition(worldTransformation);
-    this->worldRotation = this->GetWorldRotationEuler(worldTransformation);
-    this->worldScale = this->GetWorldScale(worldTransformation);
+        UpdateDirectionVectors();
+
+        this->worldModelMatrix = this->ComputeWorldTransformationMatrix();
+        this->worldPosition = this->GetWorldPosition();
+        this->worldRotation = this->GetWorldRotationEuler();
+        this->worldScale = this->GetWorldScale();
+        this->isDirty = false;
+    }
 
 }
 
 void Transform::ResetModelMatrix()
 {
-	this->modelMatrix = glm::mat4(1.0f);
+	this->localModelMatrix = glm::mat4(1.0f);
 }
 
-glm::mat4& Transform::GetModelMatrix()
+glm::mat4& Transform::GetWorldModelMatrix()
 {
-	return this->modelMatrix;
+	return this->worldModelMatrix;
+}
+
+glm::mat4& Transform::GetLocalModelMatrix()
+{
+    return this->localModelMatrix;
 }
 
 void Transform::DisplayComponent()
 {
+        bool changed = false;
+
         //Position
         ImGui::PushItemWidth(this->inputBoxLength);
         ImGui::Text("Position");
         ImGui::Text("X:");
         ImGui::SameLine();
-        ImGui::InputFloat("##posX", &this->localPosition.x, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##posX", &this->localPosition.x, 0.0f, 0.0f, "%.3f");
 
         ImGui::SameLine();
 
         ImGui::Text("Y:");
         ImGui::SameLine();
-
-        ImGui::InputFloat("##posY", &this->localPosition.y, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##posY", &this->localPosition.y, 0.0f, 0.0f, "%.3f");
         ImGui::SameLine();
 
         ImGui::Text("Z:");
         ImGui::SameLine();
-        ImGui::InputFloat("##posZ", &this->localPosition.z, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##posZ", &this->localPosition.z, 0.0f, 0.0f, "%.3f");
 
         //Rotation
         ImGui::Text("Rotation");
         ImGui::Text("X:");
         ImGui::SameLine();
+        changed |= ImGui::InputFloat("##rotX", &this->localRotation.x, 0.0f, 0.0f, "%.3f");
 
-        ImGui::InputFloat("##rotX", &this->localRotation.x, 0.0f, 0.0f, "%.3f");
         ImGui::SameLine();
 
         ImGui::Text("Y:");
         ImGui::SameLine();
-        ImGui::InputFloat("##rotY", &this->localRotation.y, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##rotY", &this->localRotation.y, 0.0f, 0.0f, "%.3f");
         ImGui::SameLine();
 
         ImGui::Text("Z:");
         ImGui::SameLine();
-        ImGui::InputFloat("##rotZ", &this->localRotation.z, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##rotZ", &this->localRotation.z, 0.0f, 0.0f, "%.3f");
 
         //Scale
         ImGui::Text("Scale");
         ImGui::Text("X:");
         ImGui::SameLine();
-        ImGui::InputFloat("##scaleX", &this->localScale.x, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##scaleX", &this->localScale.x, 0.0f, 0.0f, "%.3f");
         ImGui::SameLine();
 
         ImGui::Text("Y:");
         ImGui::SameLine();
-        ImGui::InputFloat("##scaleY", &this->localScale.y, 0.0f, 0.0f, "%.3f");
+        changed |= ImGui::InputFloat("##scaleY", &this->localScale.y, 0.0f, 0.0f, "%.3f");
         ImGui::SameLine();
 
         ImGui::Text("Z:");
         ImGui::SameLine();
-        ImGui::InputFloat("##scaleZ", &this->localScale.z, 0.0f, 0.0f, "%.3f");
-        ImGui::PopItemWidth();
-    
+        changed |= ImGui::InputFloat("##scaleZ", &this->localScale.z, 0.0f, 0.0f, "%.3f");
+        ImGui::PopItemWidth();   
+
+        if (changed)
+        {
+            this->MarkDirty();
+        }
 }
 
 
@@ -151,9 +154,7 @@ void Transform::UpdateDirectionVectors()
         glm::mat4 rotationPitch = glm::rotate(glm::mat4(1.0f), glm::radians(this->localRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
         glm::mat4 rotationRoll = glm::rotate(glm::mat4(1.0f), glm::radians(this->localRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-
         glm::mat4 rotationMatrix = rotationYaw * rotationPitch * rotationRoll;
-
 
         this->forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
         this->right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
@@ -185,53 +186,49 @@ glm::mat4 Transform::GetWorldTransformHelper(Transform* obj)
 {
     if (obj->GetGameObject()->GetParent() == nullptr)
     {
-        return obj->GetModelMatrix();
+        return obj->GetLocalModelMatrix();
     }
     else
     {
         Transform* parentTransform = obj->GetGameObject()->GetParent()->GetComponent<Transform>();
         glm::mat4 parentWorldTransform = GetWorldTransformHelper(parentTransform);
-        glm::mat4 localTransform = obj->GetModelMatrix();
+        glm::mat4 localTransform = obj->GetLocalModelMatrix();
 
         return parentWorldTransform * localTransform;
     }
 }
 
-glm::mat4 Transform::GetWorldTransformationMatrix()
+glm::mat4 Transform::ComputeWorldTransformationMatrix()
 {
     return GetWorldTransformHelper(this);
 }
 
 
-glm::vec3 Transform::GetWorldPosition(const glm::mat4& transform)
+glm::vec3 Transform::GetWorldPosition()
 {
-    return glm::vec3(transform[3]);
+    return glm::vec3(this->worldModelMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
-glm::vec3 Transform::GetWorldScale(const glm::mat4& transform)
+glm::vec3 Transform::GetWorldScale()
 {
-    float scaleX = glm::length(glm::vec3(transform[0]));
-    float scaleY = glm::length(glm::vec3(transform[1]));
-    float scaleZ = glm::length(glm::vec3(transform[2]));
+    float scaleX = glm::length(glm::vec3(this->worldModelMatrix[0]));
+    float scaleY = glm::length(glm::vec3(this->worldModelMatrix[1]));
+    float scaleZ = glm::length(glm::vec3(this->worldModelMatrix[2]));
 
     return glm::vec3(scaleX, scaleY, scaleZ);
 }
 
-glm::vec3 Transform::GetWorldRotationEuler(const glm::mat4& transform)
+glm::vec3 Transform::GetWorldRotationEuler()
 {
-    glm::quat rotationQuat = this->GetWorldRotationQuaternion(transform);
-
+    glm::quat rotationQuat = this->GetWorldRotationQuaternion();
     glm::vec3 eulerAngles = glm::eulerAngles(rotationQuat);
-
     return glm::degrees(eulerAngles);
-
 }
 
-glm::quat Transform::GetWorldRotationQuaternion(const glm::mat4& transform)
+glm::quat Transform::GetWorldRotationQuaternion()
 {
-
-    glm::mat3 rotationMatrix = glm::mat3(transform);
-    glm::vec3 scale = this->GetWorldScale(transform);
+    glm::mat3 rotationMatrix = glm::mat3(this->worldModelMatrix);
+    glm::vec3 scale = this->GetWorldScale();
 
     rotationMatrix[0] /= scale.x;
     rotationMatrix[1] /= scale.y;
@@ -240,3 +237,52 @@ glm::quat Transform::GetWorldRotationQuaternion(const glm::mat4& transform)
     return glm::quat_cast(rotationMatrix);
 }
 
+void Transform::MarkDirty()
+{
+    this->isDirty = true;
+
+    for (GameObject* child : this->GetGameObject()->GetChildren())
+    {
+        Transform* childTransform = child->GetComponent<Transform>();
+        childTransform->MarkDirty(); 
+    }
+}
+
+
+glm::vec3 Transform::WorldToLocalPosition(const glm::vec3& worldPos) const
+{
+    GameObject* parentObj = this->GetGameObject()->GetParent();
+    if (parentObj != nullptr)
+    {
+        glm::mat4 inverseParentWorldMatrix = glm::inverse(parentObj->GetComponent<Transform>()->GetWorldModelMatrix());
+        return glm::vec3(inverseParentWorldMatrix * glm::vec4(worldPos, 1.0f));
+    }
+
+    return worldPos;
+}
+
+glm::vec3 Transform::WorldToLocalRotation(const glm::vec3& eulerRot) const
+{
+    GameObject* parentObj = this->GetGameObject()->GetParent();
+    if (parentObj != nullptr)
+    {
+        glm::quat worldRotationQuat = glm::quat(glm::radians(eulerRot));
+        glm::quat parentWorldRotation = parentObj->GetComponent<Transform>()->GetWorldRotationQuaternion();
+        glm::quat localRotationQuat = glm::inverse(parentWorldRotation) * worldRotationQuat;
+        return glm::degrees(glm::eulerAngles(localRotationQuat));
+    }
+
+    return eulerRot;
+}
+
+glm::vec3 Transform::WorldToLocalScale(const glm::vec3& worldScale) const
+{
+    GameObject* parentObj = this->GetGameObject()->GetParent();
+    if (parentObj != nullptr)
+    {
+        glm::vec3 parentWorldScale = parentObj->GetComponent<Transform>()->GetWorldScale();
+        return worldScale / parentWorldScale;
+    }
+
+    return worldScale; 
+}

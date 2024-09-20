@@ -44,7 +44,6 @@ void SetupSampleScene(Scene& sampleScene)
     Transform* squareTransform = square->GetComponent<Transform>();
     squareTransform->Translate(glm::vec3(200.0f,0.0f, 0.0f));
     circle->AddChild(square);
-    sampleScene.AddObject(square);
 
     ComponentUI::SetGameObject(circle);
 
@@ -129,6 +128,9 @@ int main(void)
             firstCam = obj->GetComponent<Camera>();
             if (firstCam != nullptr) break;
         }
+        
+       
+
         Picking::SetCamera(firstCam);
 
         double currentFrame = glfwGetTime();
@@ -142,8 +144,8 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
             calculateFpsAndDeltaTime(&numFrames, &currentFrame, &lastFrame, &lastTime, &deltaTime);
-            
-            Picking::Update(sampleScene.GetGameObjects());
+            //std::cout << Picking::GetSelectedObjects().size() << std::endl;
+            Picking::Update(sampleScene.TraverseDepthFirst());
             
 
             if (Picking::GetSelectedObjects().size() == 1)
