@@ -32,7 +32,7 @@ void ComponentUI::DrawComponent(Component* component)
             {
                 
                 std::string popupId = "RemoveComponentDropdown_" + std::to_string(reinterpret_cast<uintptr_t>(component));
-                std::cout << "Button clicked on " << std::to_string(reinterpret_cast<uintptr_t>(component)) << std::endl;
+                //std::cout << "Button clicked on " << std::to_string(reinterpret_cast<uintptr_t>(component)) << std::endl;
                 
                 ImGui::OpenPopup(popupId.c_str());
             }          
@@ -56,7 +56,7 @@ void ComponentUI::DisplayThreeDotsPopup(Component* component)
     
     if (ImGui::BeginPopup(popupId.c_str()))
     {
-        std::cout << "Popup started." << std::endl;
+        //std::cout << "Popup started." << std::endl;
         if (ImGui::MenuItem("Remove Component"))
         {
             for (const auto& pair : componentMap)

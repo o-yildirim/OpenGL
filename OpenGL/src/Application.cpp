@@ -143,17 +143,13 @@ int main(void)
             Picking::Update(sampleScene.TraverseDepthFirst());
             
 
-            if (Picking::GetSelectedObjects().size() == 1)
-            {
-                ComponentUI::SetGameObject(Picking::GetSelectedObjects()[0]);
-            }
             
 
             renderer.Clear();
 
         
             
-            
+           
 
             if (firstCam != nullptr) 
             {
@@ -165,11 +161,8 @@ int main(void)
             }
 
            
-            
+          
             EditorUI::NewFrame();
-
-            
-            
             ComponentUI::DrawObjectComponents();
             ComponentUI::DrawAddComponentButton();
 
@@ -179,8 +172,14 @@ int main(void)
 
             EditorUI::EndFrame();
             EditorUI::Render();
-            Input::Update();
             
+
+         
+            if (Picking::GetSelectedObjects().size() == 1)
+            {
+                ComponentUI::SetGameObject(Picking::GetSelectedObjects()[0]);
+            }
+            Input::Update();
 
 
             /* Swap front and back buffers */
