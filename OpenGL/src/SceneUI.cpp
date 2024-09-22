@@ -14,9 +14,10 @@ void SceneUI::DrawSceneTree()
 
     if (ImGui::CollapsingHeader(_currentScene->GetName().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen))
     {
+        float firstMargin = ImGui::GetCursorPosX() + _offset;
         for (GameObject* obj : objectsInScene)
         {
-            DrawSceneObj(obj);
+            DrawSceneObj(obj, firstMargin);
         }
     }
     
@@ -24,28 +25,28 @@ void SceneUI::DrawSceneTree()
     ImGui::End();
 }
 
-void SceneUI::DrawSceneObj(GameObject* obj)
+void SceneUI::DrawSceneObj(GameObject* obj, float margin)
 {
-    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + _offset);
+    ImGui::SetCursorPosX(margin);
     std::string headerId = obj->GetName() + "##" + std::to_string(reinterpret_cast<uintptr_t>(obj));
     if (obj->GetChildren().size() == 0)
     {
         if (ImGui::Selectable(headerId.c_str()))
         {
-            glm::vec3 objPos = obj->GetComponent<Transform>()->worldPosition;
-            std::cout << std::to_string(reinterpret_cast<uintptr_t>(obj)) <<", pos: " << objPos.x << ", " << objPos.y << ", "<< objPos.z << std::endl;
+            //glm::vec3 objPos = obj->GetComponent<Transform>()->worldPosition;
+            //std::cout << std::to_string(reinterpret_cast<uintptr_t>(obj)) <<", pos: " << objPos.x << ", " << objPos.y << ", "<< objPos.z << std::endl;
             return;
         }
     }
     else
     {
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() - _offset);
         if (ImGui::CollapsingHeader(headerId.c_str(), ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen))
         {
-            
+            margin += _offset;
             for (GameObject* child : obj->GetChildren())
             {
-                DrawSceneObj(child);
+       
+                DrawSceneObj(child, margin);
             }
         }
     }

@@ -19,5 +19,5 @@ public:
 	static void Render();
 	static void Terminate();
 	static void DisplayFrameRate();
-	inline static void UpdateFramerate(int newFramerate) { framerate = newFramerate; }
+	inline static void UpdateFramerate(int& newFramerate) { framerate = newFramerate; }
 };

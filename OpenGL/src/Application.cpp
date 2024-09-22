@@ -53,22 +53,22 @@ void SetupSampleScene(Scene& sampleScene)
     square2->AddComponent<Rectangle>();
     Transform* square2Transform = square2->GetComponent<Transform>();
     square2Transform->Translate(glm::vec3(700.0f, 500.0f, 0.0f));
-    sampleScene.AddObject(square2);
-    
+    //sampleScene.AddObject(square2);
+    square->AddChild(square2);
 
 }
 
-void calculateFpsAndDeltaTime(int* numFrames, double* currentFrame, double* lastFrame, double* lastTime, double* deltaTime)
+void calculateFpsAndDeltaTime(int& numFrames, double& currentFrame, double& lastFrame, double& lastTime, double& deltaTime)
 {   
-    (*numFrames)++;
-    *currentFrame = glfwGetTime();
-    *deltaTime = *currentFrame - *lastFrame;
-    *lastFrame = *currentFrame;
-    if (*currentFrame - *lastTime >= 1.0)
+    numFrames++;
+    currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    if (currentFrame - lastTime >= 1.0)
     {
-        EditorUI::UpdateFramerate(*numFrames);
-        *numFrames = 0;
-        *lastTime = *currentFrame;
+        EditorUI::UpdateFramerate(numFrames);
+        numFrames = 0;
+        lastTime = currentFrame;
     }
 }
 
@@ -138,7 +138,7 @@ int main(void)
         
         while (!glfwWindowShouldClose(window))
         {
-            calculateFpsAndDeltaTime(&numFrames, &currentFrame, &lastFrame, &lastTime, &deltaTime);
+            calculateFpsAndDeltaTime(numFrames, currentFrame, lastFrame, lastTime, deltaTime);
             //std::cout << Picking::GetSelectedObjects().size() << std::endl;
             Picking::Update(sampleScene.TraverseDepthFirst());
             
