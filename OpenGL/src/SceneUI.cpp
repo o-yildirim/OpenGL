@@ -12,14 +12,19 @@ void SceneUI::DrawSceneTree()
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
     ImGui::Begin("Scene");
 
+ 
     if (ImGui::CollapsingHeader(_currentScene->GetName().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen))
     {
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0)); // Transparent background
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0));
         float firstMargin = ImGui::GetCursorPosX() + _offset;
         for (GameObject* obj : objectsInScene)
         {
             DrawSceneObj(obj, firstMargin);
         }
+        ImGui::PopStyleColor(2);
     }
+
     
     ImGui::PopStyleColor();
     ImGui::End();
@@ -33,8 +38,6 @@ void SceneUI::DrawSceneObj(GameObject* obj, float margin)
     {
         if (ImGui::Selectable(headerId.c_str()))
         {
-            //glm::vec3 objPos = obj->GetComponent<Transform>()->worldPosition;
-            //std::cout << std::to_string(reinterpret_cast<uintptr_t>(obj)) <<", pos: " << objPos.x << ", " << objPos.y << ", "<< objPos.z << std::endl;
             return;
         }
     }
