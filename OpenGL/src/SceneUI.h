@@ -1,11 +1,16 @@
 #pragma once
 #include "Scene.h"
+#include "Window.h"
+#include "Transform.h"
+#include "ComponentUI.h"
+#include "unordered_map"
 
 class SceneUI 
 {
 private:
 	static Scene* _currentScene;
 	static float _offset;
+	static std::unordered_map<GameObject*, bool> headers;
 public:
 	static void DrawSceneTree();
 	static void DrawSceneObj(GameObject* obj, float margin);

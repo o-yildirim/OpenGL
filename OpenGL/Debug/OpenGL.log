@@ -1,3 +1,5 @@
 ﻿  SceneUI.cpp
-C:\Users\onyld\source\repos\OpenGL\OpenGL\src\SceneUI.cpp(11,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\Input.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\InputWrapper.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\onyld\source\repos\OpenGL\OpenGL\src\SceneUI.cpp(11,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   OpenGL.vcxproj -> C:\Users\onyld\source\repos\OpenGL\Debug\OpenGL.exe

@@ -47,6 +47,8 @@ void Transform::Scale(glm::vec3 newScale)
 
 void Transform::Update()
 {
+    if (this->disabled && this->GetGameObject()->GetDisabled()) return;
+
     if (this->isDirty)
     {
         this->ResetModelMatrix();

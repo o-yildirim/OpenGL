@@ -21,7 +21,7 @@ public:
 	}
 	inline const std::vector<GameObject*>& GetGameObjects() const { return this->_objectsInTheScene; }
 	inline void AddObject(GameObject* obj) { this->_objectsInTheScene.push_back(obj); }
-	inline void RemoveObject(GameObject* obj) 
+	inline void RemoveObject(GameObject* obj, bool permanently) 
 	{ 
 		auto it = std::remove(this->_objectsInTheScene.begin(), this->_objectsInTheScene.end(), obj);
 
@@ -29,7 +29,8 @@ public:
 		{
 			this->_objectsInTheScene.erase(it, _objectsInTheScene.end());
 		}
-		delete obj; //This object no longer exists within the scene.
+		if(permanently)
+			delete obj; //This object no longer exists within the scene.
  
 	}
 	

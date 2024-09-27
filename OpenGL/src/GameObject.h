@@ -11,6 +11,7 @@ private:
 	std::vector<GameObject*> _children;
 	GameObject* parent = nullptr;
 	std::string _name;
+	bool disabled = false;
 	
 
 public:
@@ -82,9 +83,12 @@ public:
 
 	inline const std::vector<GameObject*>& GetChildren() const { return this->_children; }
 	inline GameObject* GetParent() const { return this->parent; }
-	
+	inline void SetParent(GameObject* parent) { this->parent = parent; }
+	inline void SetDisabled(bool state) { this->disabled = state; }
+	inline bool GetDisabled() const { return this->disabled; }
 	
 	void AddChild(GameObject* obj); 
 	void RemoveChild(GameObject* obj); 
 	bool IsChild(GameObject* obj); 
+	
 };

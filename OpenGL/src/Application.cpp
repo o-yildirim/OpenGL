@@ -56,6 +56,15 @@ void SetupSampleScene(Scene& sampleScene)
     //sampleScene.AddObject(square2);
     square->AddChild(square2);
 
+    GameObject* test1 = new GameObject("1");
+    sampleScene.AddObject(test1);
+    GameObject* test2 = new GameObject("2");
+    sampleScene.AddObject(test2);
+    GameObject* test3 = new GameObject("3");
+    sampleScene.AddObject(test3);
+    GameObject* test4 = new GameObject("4");
+    sampleScene.AddObject(test4);
+
 }
 
 void calculateFpsAndDeltaTime(int& numFrames, double& currentFrame, double& lastFrame, double& lastTime, double& deltaTime)
@@ -147,10 +156,6 @@ int main(void)
 
             renderer.Clear();
 
-        
-            
-           
-
             if (firstCam != nullptr) 
             {
                 //Render shapes.
@@ -169,7 +174,6 @@ int main(void)
             SceneUI::DrawSceneTree();
 
             EditorUI::DisplayFrameRate();
-
             EditorUI::EndFrame();
             EditorUI::Render();
             
