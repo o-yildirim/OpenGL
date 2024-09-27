@@ -6,6 +6,7 @@ Transform::Transform()
 {
     this->_className = "Transform";
 	this->localModelMatrix = glm::mat4(1.0f);
+    isDirty = true;
 
 	glm::vec3 center = Window::GetCenter();
 	this->localPosition = glm::vec3(center.x, center.y, 0.0f);
@@ -60,14 +61,15 @@ void Transform::Update()
         this->localModelMatrix = glm::rotate(this->localModelMatrix, glm::radians(this->localRotation.z), glm::vec3(0, 0, 1));
         this->localModelMatrix = glm::scale(this->localModelMatrix, this->localScale);
 
-
         UpdateDirectionVectors();
-
+        
         this->worldModelMatrix = this->ComputeWorldTransformationMatrix();
         this->worldPosition = this->GetWorldPosition();
         this->worldRotation = this->GetWorldRotationEuler();
         this->worldScale = this->GetWorldScale();
+        
         this->isDirty = false;
+        
     }
 
 }
@@ -205,6 +207,10 @@ glm::mat4 Transform::ComputeWorldTransformationMatrix()
     return GetWorldTransformHelper(this);
 }
 
+glm::vec3 Transform::GetLocalPosition()
+{
+    return glm::vec3(this->localModelMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+}
 
 glm::vec3 Transform::GetWorldPosition()
 {
@@ -287,4 +293,23 @@ glm::vec3 Transform::WorldToLocalScale(const glm::vec3& worldScale) const
     }
 
     return worldScale; 
+}
+
+void Transform::SetLocalFromWorldMatrix(const glm::mat4& localMatrix)
+{
+    this->localPosition = localMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    this->localScale[0] = glm::length(glm::vec3(localMatrix[0]));
+    this->localScale[1] = glm::length(glm::vec3(localMatrix[1]));
+    this->localScale[2] = glm::length(glm::vec3(localMatrix[2]));
+
+    glm::mat3 rotationMatrix = glm::mat3(localMatrix);
+    glm::vec3 scale = this->localScale;
+
+    rotationMatrix[0] /= scale.x;
+    rotationMatrix[1] /= scale.y;
+    rotationMatrix[2] /= scale.z;
+
+    glm::quat localRotQuat = glm::quat_cast(rotationMatrix);
+    this->localRotation = glm::eulerAngles(localRotQuat);
 }

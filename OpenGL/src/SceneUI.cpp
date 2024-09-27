@@ -126,14 +126,27 @@ void SceneUI::DrawSceneObj(GameObject* obj, float margin)
 
 			if (droppedObj != obj)
 			{
+				Transform* childTransform = droppedObj->GetComponent<Transform>();
+				glm::mat4 oldWorldMatrix = childTransform->GetWorldModelMatrix();
+			
+
 				if (GameObject* oldParent = droppedObj->GetParent())
 				{
 					oldParent->RemoveChild(droppedObj);
 				}
 				obj->AddChild(droppedObj);
 				droppedObj->SetParent(obj);
-
 				droppedObj->SetDisabled(false);
+
+				Transform* parentTransform = obj->GetComponent<Transform>();
+				glm::mat4 parentWorldMatrix = parentTransform->GetWorldModelMatrix();
+
+				// Compute the new local transformation matrix
+				glm::mat4 newLocalMatrix = glm::inverse(parentWorldMatrix) * oldWorldMatrix;
+				childTransform->SetLocalFromWorldMatrix(newLocalMatrix);
+
+
+				childTransform->MarkDirty();
 				_currentScene->RemoveObject(droppedObj, false);
 			}
 

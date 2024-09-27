@@ -5,6 +5,7 @@ GameObject* ComponentUI::_gameObjectToDisplay;
 
 void ComponentUI::DrawObjectComponents()
 {
+ 
     ImGui::SetNextWindowSize(ImVec2(360, Window::GetHeight()));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
     ImGui::Begin("Components");

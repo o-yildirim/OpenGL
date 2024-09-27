@@ -42,8 +42,9 @@ void SetupSampleScene(Scene& sampleScene)
     GameObject* square = new GameObject("Square");
     square->AddComponent<Rectangle>();
     Transform* squareTransform = square->GetComponent<Transform>();
-    squareTransform->Translate(glm::vec3(200.0f,0.0f, 0.0f));
-    circle->AddChild(square);
+    squareTransform->Translate(glm::vec3(750.0f,600.0f, 0.0f));
+    sampleScene.AddObject(square);
+    //circle->AddChild(square);
 
     ComponentUI::SetGameObject(circle);
 
@@ -55,7 +56,8 @@ void SetupSampleScene(Scene& sampleScene)
     square2Transform->Translate(glm::vec3(700.0f, 500.0f, 0.0f));
     //sampleScene.AddObject(square2);
     square->AddChild(square2);
-
+    
+    
     GameObject* test1 = new GameObject("1");
     sampleScene.AddObject(test1);
     GameObject* test2 = new GameObject("2");
@@ -64,7 +66,7 @@ void SetupSampleScene(Scene& sampleScene)
     sampleScene.AddObject(test3);
     GameObject* test4 = new GameObject("4");
     sampleScene.AddObject(test4);
-
+    
 }
 
 void calculateFpsAndDeltaTime(int& numFrames, double& currentFrame, double& lastFrame, double& lastTime, double& deltaTime)

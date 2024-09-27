@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
+
 class Transform : public Component
 {
 private:
@@ -16,7 +17,7 @@ private:
 	void ResetModelMatrix();
 	void GetRootHelper(Transform* obj, Transform*& root);
 	glm::mat4 GetWorldTransformHelper(Transform* obj);
-	void MarkDirty();
+	
 
 public:
 	glm::vec3 localPosition;
@@ -37,8 +38,9 @@ public:
 	void Rotate(float angleInDegrees, glm::vec3 rotationAxis);
 	void Scale(glm::vec3 newScale);
 	void Update();
-
+	void MarkDirty();
 	Transform* GetRoot();
+	void SetLocalFromWorldMatrix(const glm::mat4& worldMatrix);
 
 	glm::mat4& GetLocalModelMatrix();
 	glm::mat4& GetWorldModelMatrix();//Cumulative transform multiplied using all parents, grandparents etc.
@@ -47,6 +49,7 @@ public:
 	glm::vec3 GetWorldScale();
 	glm::quat GetWorldRotationQuaternion();
 	glm::vec3 GetWorldRotationEuler();
+	glm::vec3 GetLocalPosition();
 
 	glm::vec3 WorldToLocalPosition(const glm::vec3& worldPos) const;
 	glm::vec3 WorldToLocalRotation(const glm::vec3& worldRot) const;
