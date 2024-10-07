@@ -1,6 +1,10 @@
 #pragma once
 #include<vector>
+
 #include "GameObject.h"
+#include "SceneUI.h"
+#include <fstream>
+
 
 class Scene 
 {
@@ -38,5 +42,8 @@ public:
 	inline  void SetName(std::string name) {this->_name = name; }
 
 	std::vector<GameObject*> TraverseDepthFirst();
+
+	void Save();
+	static void Load(std::string path);
 };
 

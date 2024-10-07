@@ -6,7 +6,9 @@ float SceneUI::_offset = 30.0f;
 std::unordered_map<GameObject*, bool> SceneUI::headers;
 
 void SceneUI::DrawSceneTree()
-{
+{	
+	if (_currentScene == nullptr) return;
+
 	const std::vector<GameObject*>& objectsInScene = _currentScene->GetGameObjects();
 	ImGui::SetNextWindowSize(ImVec2(360, Window::GetHeight()));
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -157,31 +159,5 @@ void SceneUI::DrawSceneObj(GameObject* obj, float margin)
 }
 
 
-/*
-void SceneUI::DrawSceneObj(GameObject* obj)
-{
-	std::string headerId = obj->GetName() + "##" + std::to_string(reinterpret_cast<uintptr_t>(obj));
-	//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + _offset);
-	if (obj->GetChildren().size() == 0)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + _offset);
-		if (ImGui::Selectable(headerId.c_str()))
-		{
-			return;
-		}
-	}
-	else
-	{
 
-		if (ImGui::CollapsingHeader(headerId.c_str(), ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + _offset);
-			for (GameObject* child : obj->GetChildren())
-			{
-				DrawSceneObj(child);
-			}
-		}
-	}
-
-}*/
 

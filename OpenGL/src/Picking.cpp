@@ -7,8 +7,11 @@ glm::vec2 Picking::_areaStartPoint;
 Camera* Picking::_camera = nullptr;
 Picking::PickingStatus Picking::_status = Picking::NotPicked;
 
-void Picking::Update(std::vector<GameObject*> renderedObjects)
+void Picking::Update(Scene* scene)
 {
+	if (scene == nullptr) return;
+
+	std::vector<GameObject*> renderedObjects = scene->TraverseDepthFirst();
 	if (Input::GetMouseButtonDown(MouseButtons::Left)) //TODO Burasinin icerisinin mantigini duzelt.
 	{	
 			glm::vec2 mousePos = Input::GetMousePosition();

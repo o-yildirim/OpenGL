@@ -17,4 +17,7 @@ public:
 	inline void SetProjectionMatrix(glm::mat4 proj) { this->_projectionMatrix = proj; }
 	inline void SetViewMatrix(glm::mat4 view) { this->_viewMatrix = view; }
 	glm::vec3 ConvertScreenToWorld(glm::vec3 pos);
+
+	void to_json(nlohmann::json& j) override;
+	void from_json(nlohmann::json& j) override;
 };

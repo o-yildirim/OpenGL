@@ -1,5 +1,30 @@
 #include "Shapes.h"
 
+
+void Shape::to_json(nlohmann::json& json)
+{
+	json = 
+	{
+		{this->GetClassName(), {
+		{"color", {
+			{"r", color[0]},
+			{"g", color[1]},
+			{"b", color[2]},
+			{"a", color[3]}
+		}}
+	}}
+	};
+}
+
+void Shape::from_json(nlohmann::json& json)
+{
+	std::cout << "Adding shape" << std::endl;
+	this->color[0] = json.at("color").at("r").get<float>();
+	this->color[1] = json.at("color").at("g").get<float>();
+	this->color[2] = json.at("color").at("b").get<float>();
+	this->color[3] = json.at("color").at("a").get<float>();
+}
+
 //RECTANGLE BELOW
 Rectangle::Rectangle()
 {
@@ -96,6 +121,9 @@ size_t Rectangle::GetVertexCount()
 {
 	return 24; //6 floats per vertex (2 pos, 4 colors) and we have 4 vertices.
 }
+
+
+
 
 
 //CIRCLE BELOW
@@ -219,3 +247,4 @@ void Circle::SetPositions()
 	}
 
 }
+

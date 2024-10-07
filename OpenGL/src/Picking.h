@@ -7,6 +7,8 @@
 #include "Window.h"
 #include <vector>
 
+class Scene;
+
 class Picking
 {
 	
@@ -28,7 +30,7 @@ private:
 	static PickingStatus _status;
 public:
 	
-	static void Update(std::vector<GameObject*> renderedObjects);
+	static void Update(Scene* scene);
 	static GameObject* GetClosest(std::vector<GameObject*> renderedObjects, glm::vec2 point);
 	static std::vector<GameObject*> GetAllWithinSelectedArea(std::vector<GameObject*> renderedObjects, glm::vec2 startPos, glm::vec2 endPos);
 	inline static std::vector<GameObject*> GetSelectedObjects() { return _pickedObjects; }

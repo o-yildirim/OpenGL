@@ -5,7 +5,8 @@ GameObject* ComponentUI::_gameObjectToDisplay;
 
 void ComponentUI::DrawObjectComponents()
 {
- 
+    if (_gameObjectToDisplay == nullptr) return;
+
     ImGui::SetNextWindowSize(ImVec2(360, Window::GetHeight()));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
     ImGui::Begin("Components");
@@ -77,6 +78,8 @@ void ComponentUI::DisplayThreeDotsPopup(Component* component)
 
 void ComponentUI::DrawAddComponentButton()
 {
+    if (_gameObjectToDisplay == nullptr) return;
+
     float windowWidth = ImGui::GetWindowSize().x;
     float buttonWidth = 100.0f;
     float padding = 20.0f; //Button will be 20 pixels lower than the previous component.

@@ -25,7 +25,8 @@ public:
     }
     
     virtual void InitBuffers(){};
-
+    void to_json(nlohmann::json& j) override;
+    void from_json(nlohmann::json& j) override;
 
     virtual inline void BindBuffers() { this->vertexArray.Bind(); this->vertexBuffer.Bind(); this->indexBuffer.Bind(); }
     virtual inline void UnbindBuffers() { this->vertexArray.Unbind(); this->vertexBuffer.Unbind(); this->indexBuffer.Unbind(); }
@@ -94,5 +95,4 @@ public:
     void SetIndices() override;
     size_t GetVertexCount() override;
     size_t GetIndexCount();
-
 };

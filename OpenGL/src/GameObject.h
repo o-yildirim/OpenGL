@@ -3,6 +3,10 @@
 #include <iostream>
 #include "Component.h"
 #include "Transform.h"
+#include "Shapes.h"
+#include "Camera.h"
+
+class ComponentUtil;
 
 class GameObject
 {
@@ -37,8 +41,8 @@ public:
 	template<typename T>
 	void AddComponent(T* component)
 	{
-		std::cout << "Will look for " << typeid(T).name() << " in GetComponent. "<< std::endl;
-		if(this->GetComponent<T>() == nullptr) // Ensure no duplicate component type
+		std::cout << "Will look for " << typeid(component).name() << " in GetComponent. "<< std::endl;
+		if(this->GetComponent<T>() == nullptr)
 		{
 			component->SetGameObject(this);
 			this->components.push_back(component);
@@ -90,5 +94,8 @@ public:
 	void AddChild(GameObject* obj); 
 	void RemoveChild(GameObject* obj); 
 	bool IsChild(GameObject* obj); 
+
+	void to_json(nlohmann::json& j);
+	void from_json(nlohmann::json& j);
 	
 };

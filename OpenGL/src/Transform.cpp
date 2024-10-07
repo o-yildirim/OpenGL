@@ -313,3 +313,32 @@ void Transform::SetLocalFromWorldMatrix(const glm::mat4& localMatrix)
     glm::quat localRotQuat = glm::quat_cast(rotationMatrix);
     this->localRotation = glm::eulerAngles(localRotQuat);
 }
+
+void Transform::to_json(nlohmann::json& j) {
+    j = {
+        {this->GetClassName(), {  
+            {"position", {{"x", localPosition.x}, {"y", localPosition.y}, {"z", localPosition.z}}},
+            {"rotation", {{"x", localRotation.x}, {"y", localRotation.y}, {"z", localRotation.z}}},
+            {"scale",    {{"x", localScale.x}, {"y", localScale.y}, {"z", localScale.z}}}
+        }}
+    };  
+}
+
+
+
+
+void Transform::from_json(nlohmann::json& json) 
+{
+    //std::cout << json.dump(4) << std::endl;
+    this->localPosition.x = json.at("position").at("x").get<float>();
+    this->localPosition.y = json.at("position").at("y").get<float>();
+    this->localPosition.z = json.at("position").at("z").get<float>();
+
+    this->localRotation.x = json.at("rotation").at("x").get<float>();
+    this->localRotation.y = json.at("rotation").at("y").get<float>();
+    this->localRotation.z = json.at("rotation").at("z").get<float>();
+
+    this->localScale.x = json.at("scale").at("x").get<float>();
+    this->localScale.y = json.at("scale").at("y").get<float>();
+    this->localScale.z = json.at("scale").at("z").get<float>();
+}

@@ -56,6 +56,9 @@ public:
 	glm::vec3 WorldToLocalScale(const glm::vec3& worldScale) const;
 	void DisplayComponent() override;
 
+	void to_json(nlohmann::json& j) override;
+	void from_json(nlohmann::json& j) override;
+
 	inline void SetRotation(glm::vec3 rot)
 	{
 		this->localRotation = rot;

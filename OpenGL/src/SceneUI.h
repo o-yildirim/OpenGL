@@ -1,9 +1,11 @@
 #pragma once
-#include "Scene.h"
+
 #include "Window.h"
 #include "Transform.h"
 #include "ComponentUI.h"
 #include "unordered_map"
+
+class Scene;
 
 class SceneUI 
 {
@@ -15,6 +17,16 @@ public:
 	static void DrawSceneTree();
 	static void DrawSceneObj(GameObject* obj, float margin);
 
-	inline static void SetCurrentScene(Scene* scene) { _currentScene = scene; }
+	inline static void SetCurrentScene(Scene* scene) 
+	{ 
+		/*
+		if (_currentScene != nullptr && _currentScene != scene)
+		{
+			delete _currentScene;
+		}
+		*/
+		_currentScene = scene; 
+	}
+
 	inline static Scene* GetCurrentScene() { return _currentScene; }
 };

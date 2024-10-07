@@ -10,6 +10,8 @@
 #include "Camera.h"
 #include "Picking.h"
 
+class Scene;
+
 class Renderer
 {
 private:

@@ -29,15 +29,16 @@
 void SetupSampleScene(Scene& sampleScene)
 {
 
-
     GameObject* camera = new GameObject("Camera");
     camera->AddComponent<Camera>();
     sampleScene.AddObject(camera);
 
+    
     GameObject* circle = new GameObject("Circle");
     circle->AddComponent<Circle>();
     circle->GetComponent<Transform>()->Translate(glm::vec3(Window::GetCenter().x - 200.0f, Window::GetCenter().y, 0.0f));
     sampleScene.AddObject(circle);
+    
 
     GameObject* square = new GameObject("Square");
     square->AddComponent<Rectangle>();
@@ -45,8 +46,8 @@ void SetupSampleScene(Scene& sampleScene)
     squareTransform->Translate(glm::vec3(750.0f,600.0f, 0.0f));
     sampleScene.AddObject(square);
     //circle->AddChild(square);
-
-    ComponentUI::SetGameObject(circle);
+    
+    ComponentUI::SetGameObject(camera);
 
     
     
@@ -116,7 +117,7 @@ int main(void)
     Scene sampleScene("Sample Scene");
     SetupSampleScene(sampleScene);
     SceneUI::SetCurrentScene(&sampleScene);
-    
+
     //BELOW MAIN PROGRAM.
     {
 
@@ -124,20 +125,6 @@ int main(void)
         Shader wireframeShader("res/shaders/ColorlessBasic.shader");
         Shader coloredShader("res/shaders/Basic.shader");
         coloredShader.Bind();
-
-        
-        Renderer renderer;
-        std::vector<GameObject*> traversedScene = sampleScene.TraverseDepthFirst();
-        Camera* firstCam = nullptr;
-        for (GameObject* obj : traversedScene)
-        {
-            firstCam = obj->GetComponent<Camera>();
-            if (firstCam != nullptr) break;
-        }
-        
-       
-
-        Picking::SetCamera(firstCam);
 
         double currentFrame = glfwGetTime();
         double lastFrame = currentFrame;
@@ -149,24 +136,49 @@ int main(void)
         
         while (!glfwWindowShouldClose(window))
         {
+
             calculateFpsAndDeltaTime(numFrames, currentFrame, lastFrame, lastTime, deltaTime);
-            //std::cout << Picking::GetSelectedObjects().size() << std::endl;
-            Picking::Update(sampleScene.TraverseDepthFirst());
             
+            Scene* currentScene = SceneUI::GetCurrentScene();
 
-            
-
-            renderer.Clear();
-
-            if (firstCam != nullptr) 
+            if (currentScene != nullptr)
             {
-                //Render shapes.
-                renderer.RenderScene(sampleScene, coloredShader, firstCam);
+                if (Input::GetKeyDown(Keys::Space))
+                {
+                    currentScene->Save();
+                }
+                else if (Input::GetKeyDown(Keys::Enter))
+                {
+                    Scene::Load("Sample Scene.json");
+                    currentScene = SceneUI::GetCurrentScene();
+                }
+         
 
-                //Render picked object wireframes.
-                renderer.RenderPicking(wireframeShader, firstCam);
+                Renderer renderer;
+                std::vector<GameObject*> traversedScene = currentScene->TraverseDepthFirst();
+                Camera* firstCam = nullptr;
+                for (GameObject* obj : traversedScene)
+                {
+                    firstCam = obj->GetComponent<Camera>();
+                    if (firstCam != nullptr) break;
+                }
+
+                Picking::SetCamera(firstCam);
+                Picking::Update(currentScene);
+
+                renderer.Clear();
+
+                if (firstCam != nullptr)
+                {
+                    //Render shapes.
+                    renderer.RenderScene(*currentScene, coloredShader, firstCam);
+
+                    //Render picked object wireframes.
+                    renderer.RenderPicking(wireframeShader, firstCam);
+                }
             }
 
+            
            
           
             EditorUI::NewFrame();
