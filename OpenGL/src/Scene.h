@@ -17,11 +17,16 @@ public:
 	Scene(std::string name): _name(name) {}
 	~Scene()
 	{
+		std::cout << "Scene destructor called" << std::endl;
 		for (GameObject* obj : this->_objectsInTheScene)
 		{
-			if(obj != nullptr)
+			if (obj != nullptr)
+			{
 				delete obj;
+			}
 		}
+		this->_objectsInTheScene.clear();
+		std::cout << "Scene destructor finished" << std::endl;
 	}
 	inline const std::vector<GameObject*>& GetGameObjects() const { return this->_objectsInTheScene; }
 	inline void AddObject(GameObject* obj) { this->_objectsInTheScene.push_back(obj); }

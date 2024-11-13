@@ -19,13 +19,8 @@ public:
 
 	inline static void SetCurrentScene(Scene* scene) 
 	{ 
-		/*
-		if (_currentScene != nullptr && _currentScene != scene)
-		{
-			delete _currentScene;
-		}
-		*/
-		_currentScene = scene; 
+		headers.clear();
+		_currentScene = scene; 	
 	}
 
 	inline static Scene* GetCurrentScene() { return _currentScene; }

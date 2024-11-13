@@ -35,4 +35,10 @@ public:
 	static std::vector<GameObject*> GetAllWithinSelectedArea(std::vector<GameObject*> renderedObjects, glm::vec2 startPos, glm::vec2 endPos);
 	inline static std::vector<GameObject*> GetSelectedObjects() { return _pickedObjects; }
 	inline static void SetCamera(Camera* cam) { if(cam != nullptr) _camera = cam; }
+	inline static void Reset() 
+	{
+		_pickedObjects.clear(); 
+		_initialPositionDifs.clear();
+		_areaStartPoint = glm::vec2(0.0f,0.0f);
+	}
 };

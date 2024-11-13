@@ -114,9 +114,9 @@ int main(void)
    
     Input::Init(window);
     EditorUI::Init(window);
-    Scene sampleScene("Sample Scene");
-    SetupSampleScene(sampleScene);
-    SceneUI::SetCurrentScene(&sampleScene);
+    Scene* sampleScene = new Scene("Sample Scene");
+    SetupSampleScene(*sampleScene);
+    SceneUI::SetCurrentScene(sampleScene);
 
     //BELOW MAIN PROGRAM.
     {
@@ -150,9 +150,10 @@ int main(void)
                 else if (Input::GetKeyDown(Keys::Enter))
                 {
                     Scene::Load("Sample Scene.json");
+                    std::cout << "Scene Loaded" << std::endl;
                     currentScene = SceneUI::GetCurrentScene();
                 }
-         
+
 
                 Renderer renderer;
                 std::vector<GameObject*> traversedScene = currentScene->TraverseDepthFirst();

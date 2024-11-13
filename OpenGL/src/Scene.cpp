@@ -73,5 +73,16 @@ void Scene::Load(std::string path)
 		loadedScene->AddObject(sceneObj);
 	}
 	//After the entire scene is loaded.
+	
+	Picking::Reset();
+	ComponentUI::SetGameObject(loadedScene->GetGameObjects()[0]);
+
+	Scene* cur = SceneUI::GetCurrentScene();
+	if (cur != nullptr && cur != loadedScene)
+	{
+		std::cout << "Deleting current scene" << std::endl;
+		delete cur;
+	}
+	std::cout << "Setting the new scene" << std::endl;
 	SceneUI::SetCurrentScene(loadedScene);
 }

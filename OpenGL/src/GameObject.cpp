@@ -11,6 +11,7 @@ GameObject::GameObject(std::string name)
 
 GameObject::~GameObject()
 {
+    //std::cout << "Deleting " << this->GetName() << std::endl;
     for (Component* component : this->components)
     {
         delete component;
@@ -50,7 +51,8 @@ bool GameObject::IsChild(GameObject* obj)
     return false;
 }
 
-void GameObject::to_json(nlohmann::json& j) {
+void GameObject::to_json(nlohmann::json& j) 
+{
     nlohmann::json childArray = nlohmann::json::array();
     for (GameObject* child : this->GetChildren()) 
     {
