@@ -6,10 +6,10 @@ What you can do:
 - Render basic shapes (circle, rectangle).
 - Basic transformations such as rotating, moving and scaling objects.
 - Picking objects with mouse.
+- - Scene logic and UI for that.
+- Scene save/load.
 
 To-do list:
-- Scene logic and UI for that.
-- Scene save/load.
 - Rigidbody and collider components.
 - Improvement on Camera UI in the components menu.
 - Rendering textures.
